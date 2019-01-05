@@ -100,11 +100,7 @@ class BufferedImageDisplay(private val width: Int, private val height: Int) : Di
     }
 
     override fun plot(x: Int, y: Int, colour: Vec3) {
-        try {
-            bufferedImage.setRGB(x, height - (y + 1), Color(colour.r(), colour.g(), colour.b()).rgb)
-        } catch (e: ArrayIndexOutOfBoundsException) {
-            println("Out of bounds at : $x, $y, ${height - y}")
-        }
+        bufferedImage.setRGB(x, height - (y + 1), Color(colour.r(), colour.g(), colour.b()).rgb)
     }
 
     fun image(): BufferedImage {
