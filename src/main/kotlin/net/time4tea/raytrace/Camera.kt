@@ -1,6 +1,7 @@
 package net.time4tea.raytrace
 
 import kotlin.math.tan
+import kotlin.random.Random.Default.nextFloat
 
 class Camera(
     private val origin: Vec3,
@@ -31,6 +32,12 @@ class Camera(
     }
 
     companion object {
-        private fun random_in_unit_disc(): Vec3 = Vec3.random()
+        private fun random_in_unit_disc(): Vec3 {
+            var p: Vec3
+            do {
+                p = 2.0f * Vec3( nextFloat(), nextFloat(), 0.0f) - Vec3(1.0f, 1.0f, 0.0f)
+            } while ( p.dot(p) > 1.0 )
+            return p
+        }
     }
 }
