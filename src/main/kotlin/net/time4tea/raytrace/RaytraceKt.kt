@@ -1,5 +1,6 @@
 package net.time4tea.raytrace
 
+import kotlinx.coroutines.*
 import java.awt.Color
 import java.awt.Dimension
 import java.awt.image.BufferedImage
@@ -42,21 +43,37 @@ class Renderer(private val world: Hitable, private val ns: Int) {
         val nx = display.size().width
         val ny = display.size().height
 
+        val jobs = mutableListOf<Deferred<Pair<Int, List<Vec3>>>>()
+
         for (j in 0 until ny) {
-            for (i in 0 until nx) {
-                val col = Vec3(0f, 0f, 0f)
-                for (s in 0..ns) {
-                    val u = (i + Random.nextFloat()) / nx.toFloat()
-                    val v = (j + Random.nextFloat()) / ny.toFloat()
-                    col += colour(camera.get_ray(u, v), world, 0)
+            jobs.add(GlobalScope.async {
+                val row = mutableListOf<Vec3>()
+
+                for (i in 0 until nx) {
+                    val col = Vec3(0f, 0f, 0f)
+                    for (s in 0..ns) {
+                        val u = (i + Random.nextFloat()) / nx.toFloat()
+                        val v = (j + Random.nextFloat()) / ny.toFloat()
+                        col += colour(camera.get_ray(u, v), world, 0)
+                    }
+
+                    col /= ns.toFloat()
+
+                    row.add(col.sqrt())
                 }
 
-                col /= ns.toFloat()
+                Pair(j, row)
+            })
+        }
 
-                display.plot(i, j, col.sqrt())
+        runBlocking {
+            jobs.forEach {
+                val result = it.await()
+                for ((index, colour) in result.second.withIndex()) {
+                    display.plot(index, result.first, colour)
+                }
             }
         }
-        println("Complete")
     }
 }
 
@@ -106,32 +123,19 @@ fun random_scene(): Hitable {
             val centre = Vec3(a + 0.9f * Random.nextFloat(), 0.2f, b + 0.9f * Random.nextFloat())
             if ((centre - Vec3(4.0f, 0.2f, 0.0f)).length() > 0.9) {
 
-                if (choose_mat < 0.8) {
-                    list.add(
-                        Sphere(
-                            centre,
-                            0.2f,
-                            Lambertian(Vec3(Random.nextFloat(), Random.nextFloat(), Random.nextFloat()))
-                        )
+                val material = when {
+                    choose_mat < 0.8 -> Lambertian(Vec3(Random.nextFloat(), Random.nextFloat(), Random.nextFloat()))
+                    choose_mat < 0.95 -> Metal(
+                        Vec3(
+                            0.5f * (1f + Random.nextFloat()),
+                            0.5f * (1f + Random.nextFloat()),
+                            0.5f * (1f + Random.nextFloat())
+                        ), 0.5f * Random.nextFloat()
                     )
-                } else if (choose_mat < 0.95) {
-                    list.add(
-                        Sphere(
-                            centre,
-                            0.2f,
-                            Metal(
-                                Vec3(
-                                    0.5f * (1f + Random.nextFloat()),
-                                    0.5f * (1f + Random.nextFloat()),
-                                    0.5f * (1f + Random.nextFloat())
-                                ), 0.5f * Random.nextFloat()
-                            )
-                        )
-                    )
+                    else -> Dielectric(1.5f)
                 }
-                else {
-                    list.add(Sphere(centre, 0.2f, Dielectric(1.5f)))
-                }
+
+                list.add(Sphere(centre, 0.2f, material))
             }
         }
     }
@@ -165,7 +169,7 @@ fun main() {
 
     val camera = Camera(lookfrom, lookat, Vec3(0f, 1f, 0f), 20f, aspect, aperture, dist_to_focus)
 
-    val renderer = Renderer(world, 2)
+    val renderer = Renderer(world, 40)
 
     val frame = SwingFrame(display.image())
 
