@@ -80,7 +80,7 @@ class Renderer(private val world: Hitable, private val ns: Int) {
 class SwingFrame(image: BufferedImage) : JFrame() {
 
     private val icon = JLabel(ImageIcon(image))
-    private val timer = Timer(50) { e -> icon.repaint() }
+    private val timer = Timer(50) { icon.repaint() }
 
     init {
         title = "something"

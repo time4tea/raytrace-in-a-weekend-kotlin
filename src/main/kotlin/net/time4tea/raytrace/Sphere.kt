@@ -1,6 +1,6 @@
 package net.time4tea.raytrace
 
-class Sphere(val centre: Vec3, val radius: Float, val material: Material) : Hitable {
+class Sphere(private val centre: Vec3, private val radius: Float, private val material: Material) : Hitable {
 
     override fun hit(ray: Ray, min: Float, max: Float): Hit? {
         val origin_centre = ray.origin() - centre

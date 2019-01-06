@@ -10,7 +10,7 @@ class Camera(
     fov: Float,
     aspect: Float,
     aperture: Float,
-    private val focus_dist: Float
+    focus_dist: Float
 ) {
     private val lens_radius = aperture / 2f
     private val theta = fov * Math.PI / 180f
@@ -21,9 +21,9 @@ class Camera(
     private val u = (up.cross(w)).unit()
     private val v = w.cross(u)
 
-    val lower_left_corner = origin - half_width * focus_dist * u - half_height * focus_dist * v - focus_dist * w
-    val horizontal = 2 * half_width * focus_dist * u
-    val vertical = 2 * half_height * focus_dist * v
+    private val lower_left_corner = origin - half_width * focus_dist * u - half_height * focus_dist * v - focus_dist * w
+    private val horizontal = 2 * half_width * focus_dist * u
+    private val vertical = 2 * half_height * focus_dist * v
 
     fun get_ray(s: Float, t: Float): Ray {
         val rd: Vec3 = lens_radius * random_in_unit_disc()
