@@ -28,7 +28,7 @@ class Vec3(private var e0: Float, private var e1: Float, private var e2: Float) 
     fun b(): Float = e2
 
     fun squared_length(): Float = e0 * e0 + e1 * e1 + e2 * e2
-    fun length(): Float = kotlin.math.sqrt(squared_length())
+    fun length(): Float = sqrt(squared_length())
 
     fun make_unit_vector() {
         val k = 1.0f / length()
@@ -126,7 +126,7 @@ class Vec3(private var e0: Float, private var e1: Float, private var e2: Float) 
     }
 
     fun sqrt(): Vec3 {
-        return Vec3(kotlin.math.sqrt(e0), kotlin.math.sqrt(e1), kotlin.math.sqrt(e2))
+        return Vec3(sqrt(e0), sqrt(e1), sqrt(e2))
     }
 }
 

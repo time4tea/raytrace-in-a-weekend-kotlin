@@ -1,5 +1,7 @@
 package net.time4tea.raytrace
 
+import kotlin.math.sqrt
+
 class Sphere(private val centre: Vec3, private val radius: Float, private val material: Material) : Hitable {
 
     override fun hit(ray: Ray, min: Float, max: Float): Hit? {
@@ -11,7 +13,7 @@ class Sphere(private val centre: Vec3, private val radius: Float, private val ma
 
         val discriminant = b * b - a * c
         return if (discriminant > 0.0) {
-            val size = Math.sqrt(discriminant.toDouble()).toFloat()
+            val size = sqrt(discriminant)
 
             var temp = (-b - size) / a
 
