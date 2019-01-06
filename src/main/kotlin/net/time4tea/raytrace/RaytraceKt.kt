@@ -1,6 +1,9 @@
 package net.time4tea.raytrace
 
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.runBlocking
 import java.awt.Color
 import java.awt.Dimension
 import java.awt.image.BufferedImage
@@ -32,8 +35,7 @@ class Renderer(private val world: Hitable, private val ns: Int) {
             } else {
                 val unit_direction = ray.direction().unit()
                 val t = 0.5f * (unit_direction.y() + 1.0f)
-
-                (1.0f - t) * Vec3.UNIT() * t * Vec3(0.5f, 0.7f, 1.0f)
+                return ((1.0f - t) * Vec3.UNIT()) + (t * Vec3(0.5f, 0.7f, 1.0f))
             }
         }
     }
@@ -50,8 +52,8 @@ class Renderer(private val world: Hitable, private val ns: Int) {
                 val row = mutableListOf<Vec3>()
 
                 for (i in 0 until nx) {
-                    val col = Vec3(0f, 0f, 0f)
-                    for (s in 0..ns) {
+                    val col = Vec3.ZERO()
+                    for (s in 0 until ns) {
                         val u = (i + Random.nextFloat()) / nx.toFloat()
                         val v = (j + Random.nextFloat()) / ny.toFloat()
                         col += colour(camera.get_ray(u, v), world, 0)
@@ -88,6 +90,9 @@ class SwingFrame(image: BufferedImage) : JFrame() {
         contentPane.add(icon)
 
         timer.start()
+
+        pack()
+        isVisible = true
     }
 }
 
@@ -157,7 +162,7 @@ fun main() {
     val lookat = Vec3(0f, 0f, 0f)
 
     val dist_to_focus = 10.0f
-    val aperture = 0.01f
+    val aperture = 0.1f
 
     val display = BufferedImageDisplay(1200, 800)
 
@@ -165,12 +170,9 @@ fun main() {
 
     val camera = Camera(lookfrom, lookat, Vec3(0f, 1f, 0f), 20f, aspect, aperture, dist_to_focus)
 
-    val renderer = Renderer(world, 40)
+    val renderer = Renderer(world, 10)
 
-    val frame = SwingFrame(display.image())
-
-    frame.pack()
-    frame.isVisible = true
+    SwingFrame(display.image())
 
     renderer.render(camera, display)
 }
