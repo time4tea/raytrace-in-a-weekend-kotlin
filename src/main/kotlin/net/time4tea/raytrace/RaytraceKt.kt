@@ -172,6 +172,5 @@ fun main() {
     frame.pack()
     frame.isVisible = true
 
-    val t = Thread(Runnable { renderer.render(camera, display) })
-    t.start()
+    renderer.render(camera, display)
 }
