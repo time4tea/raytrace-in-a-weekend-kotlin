@@ -5,6 +5,8 @@ import kotlin.random.Random
 
 class Vec3(private var e0: Float, private var e1: Float, private var e2: Float) {
 
+    constructor(e0: Double, e1: Double, e2: Double):this(e0.toFloat(), e1.toFloat(), e2.toFloat())
+
     companion object {
 
         fun UNIT() = Vec3(1.0f, 1.0f, 1.0f)
@@ -30,18 +32,19 @@ class Vec3(private var e0: Float, private var e1: Float, private var e2: Float) 
     fun squared_length(): Float = e0 * e0 + e1 * e1 + e2 * e2
     fun length(): Float = sqrt(squared_length())
 
-    fun make_unit_vector() {
-        val k = 1.0f / length()
-        e0 *= k
-        e1 *= k
-        e2 *= k
-    }
-
     operator fun unaryPlus() = this
-    operator fun unaryMinus() = Vec3(-e0, -e1, -e2)
+    operator fun unaryMinus() = Vec3(
+        -e0,
+        -e1,
+        -e2
+    )
 
     operator fun plus(other: Vec3): Vec3 {
-        return Vec3(e0 + other.e0, e1 + other.e1, e2 + other.e2)
+        return Vec3(
+            e0 + other.e0,
+            e1 + other.e1,
+            e2 + other.e2
+        )
     }
 
     operator fun plusAssign(other: Vec3) {
@@ -51,7 +54,11 @@ class Vec3(private var e0: Float, private var e1: Float, private var e2: Float) 
     }
 
     operator fun minus(other: Vec3): Vec3 {
-        return Vec3(e0 - other.e0, e1 - other.e1, e2 - other.e2)
+        return Vec3(
+            e0 - other.e0,
+            e1 - other.e1,
+            e2 - other.e2
+        )
     }
 
     operator fun minusAssign(other: Vec3) {
@@ -60,10 +67,18 @@ class Vec3(private var e0: Float, private var e1: Float, private var e2: Float) 
         e2 -= other.e2
     }
 
-    operator fun times(t: Float): Vec3 = Vec3(e0 * t, e1 * t, e2 * t)
+    operator fun times(t: Float): Vec3 = Vec3(
+        e0 * t,
+        e1 * t,
+        e2 * t
+    )
 
     operator fun times(other: Vec3): Vec3 {
-        return Vec3(e0 * other.e0, e1 * other.e1, e2 * other.e2)
+        return Vec3(
+            e0 * other.e0,
+            e1 * other.e1,
+            e2 * other.e2
+        )
     }
 
     operator fun timesAssign(other: Vec3) {
@@ -73,11 +88,19 @@ class Vec3(private var e0: Float, private var e1: Float, private var e2: Float) 
     }
 
     operator fun div(other: Vec3): Vec3 {
-        return Vec3(e0 / other.e0, e1 / other.e1, e2 / other.e2)
+        return Vec3(
+            e0 / other.e0,
+            e1 / other.e1,
+            e2 / other.e2
+        )
     }
 
     operator fun div(s: Float): Vec3 {
-        return Vec3(e0 / s, e1 / s, e2 / s)
+        return Vec3(
+            e0 / s,
+            e1 / s,
+            e2 / s
+        )
     }
 
     operator fun divAssign(other: Vec3) {
@@ -98,7 +121,9 @@ class Vec3(private var e0: Float, private var e1: Float, private var e2: Float) 
         e2 /= f
     }
 
-    fun dot(other: Vec3): Float = e0 * other.e0 + e1 * other.e1 + e2 * other.e2
+    fun dot(other: Vec3): Float {
+        return e0 * other.e0 + e1 * other.e1 + e2 * other.e2
+    }
 
     fun cross(v2: Vec3): Vec3 {
         return Vec3(
@@ -111,7 +136,7 @@ class Vec3(private var e0: Float, private var e1: Float, private var e2: Float) 
     fun unit(): Vec3 = this / length()
 
     fun reflect(n: Vec3): Vec3 {
-        return this - n * (2 * this.dot(n))
+        return this - 2 * this.dot(n) * n
     }
 
     fun refract(n: Vec3, ni_over_nt: Float): Vec3? {
@@ -126,7 +151,11 @@ class Vec3(private var e0: Float, private var e1: Float, private var e2: Float) 
     }
 
     fun sqrt(): Vec3 {
-        return Vec3(sqrt(e0), sqrt(e1), sqrt(e2))
+        return Vec3(
+            sqrt(e0),
+            sqrt(e1),
+            sqrt(e2)
+        )
     }
 }
 
