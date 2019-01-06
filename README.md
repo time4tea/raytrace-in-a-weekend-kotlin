@@ -7,3 +7,7 @@ This is a pretty direct translation of https://github.com/petershirley/raytracin
 Any bugs are my own.
 
 Please feel free to copy / change / fork / raise issues as you see fit.
+
+## Example
+
+![Example](example-output/example1.png)

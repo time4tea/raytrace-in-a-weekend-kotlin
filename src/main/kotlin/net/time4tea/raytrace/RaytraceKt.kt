@@ -7,6 +7,10 @@ import kotlinx.coroutines.runBlocking
 import java.awt.Color
 import java.awt.Dimension
 import java.awt.image.BufferedImage
+import java.io.File
+import java.time.Duration
+import java.time.Instant
+import javax.imageio.ImageIO
 import javax.swing.ImageIcon
 import javax.swing.JFrame
 import javax.swing.JLabel
@@ -125,14 +129,14 @@ fun random_scene(): Hitable {
             if ((centre - Vec3(4.0f, 0.2f, 0.0f)).length() > 0.9) {
 
                 val material = when {
-                    choose_mat < 0.8 -> Lambertian(Vec3(Random.nextFloat(), Random.nextFloat(), Random.nextFloat()))
-                    choose_mat < 0.95 -> Metal(
+                    choose_mat < 0.8 -> Metal(
                         Vec3(
                             0.5f * (1f + Random.nextFloat()),
                             0.5f * (1f + Random.nextFloat()),
                             0.5f * (1f + Random.nextFloat())
                         ), 0.5f * Random.nextFloat()
                     )
+                    choose_mat < 0.95 -> Lambertian(Vec3(Random.nextFloat(), Random.nextFloat(), Random.nextFloat()))
                     else -> Dielectric(1.5f)
                 }
 
@@ -172,7 +176,15 @@ fun main() {
 
     val renderer = Renderer(world, 10)
 
-    SwingFrame(display.image())
+    val image = display.image()
+
+    SwingFrame(image)
+    val start = Instant.now()
 
     renderer.render(camera, display)
+
+    val duration = Duration.between(start, Instant.now())
+    println("Duration was $duration")
+
+    ImageIO.write(image, "PNG", File("output.png"))
 }
