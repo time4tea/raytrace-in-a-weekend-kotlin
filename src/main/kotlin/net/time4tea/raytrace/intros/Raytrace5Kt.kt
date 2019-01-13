@@ -1,4 +1,6 @@
-package net.time4tea.raytrace
+package net.time4tea.raytrace.intros
+
+import net.time4tea.raytrace.*
 
 
 fun main() {
@@ -28,7 +30,11 @@ fun main() {
         } else {
             val unit_direction = ray.direction().unit()
             val t = 0.5f * (unit_direction.y() + 1.0f)
-            return ((1.0f - t) * Vec3.UNIT()) + (t * Vec3(0.5f, 0.7f, 1.0f))
+            return ((1.0f - t) * Vec3.UNIT()) + (t * Vec3(
+                0.5f,
+                0.7f,
+                1.0f
+            ))
         }
     }
 
@@ -43,10 +49,26 @@ fun main() {
 
     val world = HitableList(
         listOf(
-            Sphere(Vec3(0.0, 0.0, -1.0), 0.5f, Lambertian(Vec3(0.8, 0.3, 0.3))),
-            Sphere(Vec3(0.0, -100.5, -1.0), 100f, Lambertian(Vec3(0.8, 0.8, 0.0))),
-            Sphere(Vec3(1.0, 0.0, -1.0), 0.5f, Metal(Vec3(0.8, 0.6, 0.2), 0.0f)),
-            Sphere(Vec3(-1.0, 0.0, -1.0), 0.5f, Metal(Vec3(0.8, 0.8, 0.8), 0.0f))
+            Sphere(
+                Vec3(0.0, 0.0, -1.0),
+                0.5f,
+                Lambertian(Vec3(0.8, 0.3, 0.3))
+            ),
+            Sphere(
+                Vec3(0.0, -100.5, -1.0),
+                100f,
+                Lambertian(Vec3(0.8, 0.8, 0.0))
+            ),
+            Sphere(
+                Vec3(1.0, 0.0, -1.0),
+                0.5f,
+                Metal(Vec3(0.8, 0.6, 0.2), 0.0f)
+            ),
+            Sphere(
+                Vec3(-1.0, 0.0, -1.0),
+                0.5f,
+                Metal(Vec3(0.8, 0.8, 0.8), 0.0f)
+            )
         )
     )
 

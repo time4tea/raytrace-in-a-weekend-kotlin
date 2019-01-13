@@ -1,5 +1,6 @@
-package net.time4tea.raytrace
+package net.time4tea.raytrace.intros
 
+import net.time4tea.raytrace.*
 import kotlin.math.sqrt
 
 
@@ -28,7 +29,11 @@ fun main() {
         val unit_direction = ray.direction().unit()
         val t = 0.5f * (unit_direction.y() + 1.0f)
         println(t)
-        return ((1.0f - t) * Vec3.UNIT()) + (t * Vec3(0.5f, 0.7f, 1.0f))
+        return ((1.0f - t) * Vec3.UNIT()) + (t * Vec3(
+            0.5f,
+            0.7f,
+            1.0f
+        ))
     }
 
     val display = BufferedImageDisplay(600, 300)

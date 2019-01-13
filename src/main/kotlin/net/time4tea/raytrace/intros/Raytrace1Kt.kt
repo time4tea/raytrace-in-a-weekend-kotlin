@@ -1,4 +1,8 @@
-package net.time4tea.raytrace
+package net.time4tea.raytrace.intros
+
+import net.time4tea.raytrace.BufferedImageDisplay
+import net.time4tea.raytrace.SwingFrame
+import net.time4tea.raytrace.Vec3
 
 fun main() {
     val display = BufferedImageDisplay(200, 100)
