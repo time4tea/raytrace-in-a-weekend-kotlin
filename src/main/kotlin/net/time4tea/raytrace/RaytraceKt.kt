@@ -157,8 +157,9 @@ fun main() {
     ) + random_scene()
 
     println("Items : ${hitables.size}")
-    val world = HitableList(hitables)
+    val world = BVH(hitables)
 
+    println("BVH Items : ${world.components()}")
     val lookfrom = Vec3(13f, 2f, 3f)
     val lookat = Vec3(0f, 0f, 0f)
 

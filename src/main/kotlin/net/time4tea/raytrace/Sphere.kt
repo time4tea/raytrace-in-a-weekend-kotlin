@@ -4,6 +4,19 @@ import kotlin.math.sqrt
 
 class Sphere(private val centre: Vec3, private val radius: Float, private val material: Material) : Hitable {
 
+    private val box = AABB(
+        centre - Vec3(radius, radius, radius),
+        centre + Vec3(radius, radius, radius)
+    )
+
+    override fun components(): Int {
+        return 1
+    }
+
+    override fun bbox(): AABB? {
+        return box
+    }
+
     override fun hit(ray: Ray, min: Float, max: Float): Hit? {
         val origin_centre = ray.origin() - centre
 

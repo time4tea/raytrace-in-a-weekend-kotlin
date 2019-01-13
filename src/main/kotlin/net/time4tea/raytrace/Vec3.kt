@@ -5,9 +5,13 @@ import kotlin.random.Random
 
 class Vec3(private var e0: Float, private var e1: Float, private var e2: Float) {
 
-    constructor(e0: Double, e1: Double, e2: Double):this(e0.toFloat(), e1.toFloat(), e2.toFloat())
+    constructor(e0: Double, e1: Double, e2: Double) : this(e0.toFloat(), e1.toFloat(), e2.toFloat())
 
     companion object {
+
+        fun xx(): (Vec3) -> Float = { it.e0 }
+        fun yy(): (Vec3) -> Float = { it.e1 }
+        fun zz(): (Vec3) -> Float = { it.e2 }
 
         fun UNIT() = Vec3(1.0f, 1.0f, 1.0f)
         fun ZERO() = Vec3(0f, 0f, 0f)
@@ -20,6 +24,7 @@ class Vec3(private var e0: Float, private var e1: Float, private var e2: Float) 
             return p
         }
     }
+
 
     fun x(): Float = e0
     fun y(): Float = e1
