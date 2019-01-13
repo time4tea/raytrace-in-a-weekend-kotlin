@@ -117,7 +117,7 @@ class BufferedImageDisplay(private val width: Int, private val height: Int) : Di
     }
 }
 
-fun random_scene(): Hitable {
+fun random_scene(): List<Hitable> {
 
     val list = mutableListOf<Hitable>()
 
@@ -144,23 +144,20 @@ fun random_scene(): Hitable {
             }
         }
     }
-    return HitableList(list)
+    return list
 }
 
 fun main() {
 
-    val biggies = HitableList(
-        listOf(
-            Sphere(Vec3(0f, -1000f, 0f), 1000f, Lambertian(Vec3(0.5f, 0.5f, 0.5f))),
-            Sphere(Vec3(0f, 1f, 0f), 1.0f, Dielectric(1.5f)),
-            Sphere(Vec3(-4f, 1f, 0f), 1.0f, Lambertian(Vec3(0.4f, 0.2f, 0.1f))),
-            Sphere(Vec3(4f, 1f, 0f), 1.0f, Metal(Vec3(0.7f, 0.6f, 0.5f), 0.0f))
-        )
-    )
+    val hitables = listOf(
+        Sphere(Vec3(0f, -1000f, 0f), 1000f, Lambertian(Vec3(0.5f, 0.5f, 0.5f))),
+        Sphere(Vec3(0f, 1f, 0f), 1.0f, Dielectric(1.5f)),
+        Sphere(Vec3(-4f, 1f, 0f), 1.0f, Lambertian(Vec3(0.4f, 0.2f, 0.1f))),
+        Sphere(Vec3(4f, 1f, 0f), 1.0f, Metal(Vec3(0.7f, 0.6f, 0.5f), 0.0f))
+    ) + random_scene()
 
-    val randoms = random_scene()
-
-    val world = HitableList(listOf(biggies, randoms))
+    println("Items : ${hitables.size}")
+    val world = HitableList(hitables)
 
     val lookfrom = Vec3(13f, 2f, 3f)
     val lookat = Vec3(0f, 0f, 0f)
