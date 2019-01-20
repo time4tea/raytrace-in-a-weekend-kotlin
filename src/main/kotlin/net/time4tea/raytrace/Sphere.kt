@@ -46,4 +46,8 @@ class Sphere(private val centre: Vec3, private val radius: Float, private val ma
             null
         }
     }
+
+    override fun toString(): String {
+        return "Sphere(centre=$centre, radius=$radius, material=$material, box=$box)"
+    }
 }

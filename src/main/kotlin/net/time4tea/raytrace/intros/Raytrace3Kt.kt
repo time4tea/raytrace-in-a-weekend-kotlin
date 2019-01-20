@@ -21,7 +21,7 @@ fun main() {
         }
         val unit_direction = ray.direction().unit()
         val t = 0.5f * (unit_direction.y() + 1.0f)
-        return ((1.0f - t) * Vec3.UNIT()) + (t * Vec3(
+        return ((1.0f - t) * Vec3.UNIT) + (t * Vec3(
             0.5f,
             0.7f,
             1.0f

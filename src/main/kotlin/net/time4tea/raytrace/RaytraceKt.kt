@@ -31,15 +31,15 @@ class Renderer(private val world: Hitable, private val ns: Int) {
                 if (depth < 50) {
                     hit.material.scatter(ray, hit)?.let { (attenuation, scattered) ->
                         attenuation * colour(scattered, world, depth + 1)
-                    } ?: Vec3.ZERO()
+                    } ?: Vec3.ZERO
                 } else {
-                    Vec3.ZERO()
+                    Vec3.ZERO
                 }
 
             } else {
                 val unit_direction = ray.direction().unit()
                 val t = 0.5f * (unit_direction.y() + 1.0f)
-                return ((1.0f - t) * Vec3.UNIT()) + (t * Vec3(0.5f, 0.7f, 1.0f))
+                return ((1.0f - t) * Vec3.UNIT) + (t * Vec3(0.5f, 0.7f, 1.0f))
             }
         }
     }
@@ -56,16 +56,16 @@ class Renderer(private val world: Hitable, private val ns: Int) {
                 val row = mutableListOf<Vec3>()
 
                 for (i in 0 until nx) {
-                    val col = Vec3.ZERO()
-                    for (s in 0 until ns) {
+
+                    val colour = (0 until ns).fold(
+                        Vec3.ZERO
+                    ) { running, _ ->
                         val u = (i + Random.nextFloat()) / nx.toFloat()
                         val v = (j + Random.nextFloat()) / ny.toFloat()
-                        col += colour(camera.get_ray(u, v), world, 0)
-                    }
+                        running + colour(camera.get_ray(u, v), world, 0)
+                    } / ns
 
-                    col /= ns.toFloat()
-
-                    row.add(col.sqrt())
+                    row.add(colour.sqrt())
                 }
 
                 Pair(j, row)
@@ -154,10 +154,10 @@ fun main() {
         Sphere(Vec3(0f, 1f, 0f), 1.0f, Dielectric(1.5f)),
         Sphere(Vec3(-4f, 1f, 0f), 1.0f, Lambertian(Vec3(0.4f, 0.2f, 0.1f))),
         Sphere(Vec3(4f, 1f, 0f), 1.0f, Metal(Vec3(0.7f, 0.6f, 0.5f), 0.0f))
-    ) + random_scene()
+    ) + HitableList(random_scene())
 
     println("Items : ${hitables.size}")
-    val world = BVH(hitables)
+    val world = HitableList(hitables)
 
     println("BVH Items : ${world.components()}")
     val lookfrom = Vec3(13f, 2f, 3f)
@@ -172,7 +172,7 @@ fun main() {
 
     val camera = Camera(lookfrom, lookat, Vec3(0f, 1f, 0f), 20f, aspect, aperture, dist_to_focus)
 
-    val renderer = Renderer(world, 10)
+    val renderer = Renderer(world, 1)
 
     val image = display.image()
 

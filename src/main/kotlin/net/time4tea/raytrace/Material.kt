@@ -40,7 +40,7 @@ class Dielectric(private val ri: Float) : Material {
     override fun scatter(input: Ray, hit: Hit): Pair<Vec3, Ray>? {
         val reflected = input.direction().reflect(hit.normal)
 
-        val attenuation = Vec3.UNIT()
+        val attenuation = Vec3.UNIT
 
         val cosine: Float
         val outward_normal: Vec3

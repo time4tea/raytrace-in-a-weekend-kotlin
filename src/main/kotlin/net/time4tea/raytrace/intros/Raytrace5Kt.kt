@@ -23,14 +23,14 @@ fun main() {
             return if (depth < 50) {
                 hit.material.scatter(ray, hit)?.let { (attenuation, scattered) ->
                     attenuation * colour(scattered, world, depth + 1)
-                } ?: Vec3.ZERO()
+                } ?: Vec3.ZERO
             } else {
-                Vec3.ZERO()
+                Vec3.ZERO
             }
         } else {
             val unit_direction = ray.direction().unit()
             val t = 0.5f * (unit_direction.y() + 1.0f)
-            return ((1.0f - t) * Vec3.UNIT()) + (t * Vec3(
+            return ((1.0f - t) * Vec3.UNIT) + (t * Vec3(
                 0.5f,
                 0.7f,
                 1.0f
@@ -74,14 +74,14 @@ fun main() {
 
     for (j in 0..ny - 1) {
         for (i in 0..nx - 1) {
-            val colour = Vec3.ZERO()
-            for ( s in 0 until ns) {
+            val colour = (0 until ns).fold(
+                Vec3.ZERO
+            ) { running, _ ->
                 val u = i.toFloat() / nx.toFloat()
                 val v = j.toFloat() / ny.toFloat()
                 val ray = camera.get_ray(u, v)
-                colour += colour(ray, world, 0)
-            }
-            colour /= ns.toFloat()
+                running + colour(ray, world, 0)
+            } / ns
             display.plot(i, j, colour.sqrt())
         }
     }

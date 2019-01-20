@@ -12,10 +12,10 @@ fun main() {
         val b = 2.0f * oc.dot(r.direction())
         val c = oc.dot(oc) - radius * radius
         val discriminant = b * b - 4 * a * c
-        if (discriminant < 0) {
-            return -1.0f
+        return if (discriminant < 0) {
+            -1.0f
         } else {
-            return (-b - sqrt(discriminant)) / (2.0f * a)
+            (-b - sqrt(discriminant)) / (2.0f * a)
         }
     }
 
@@ -29,7 +29,7 @@ fun main() {
         val unit_direction = ray.direction().unit()
         val t = 0.5f * (unit_direction.y() + 1.0f)
         println(t)
-        return ((1.0f - t) * Vec3.UNIT()) + (t * Vec3(
+        return ((1.0f - t) * Vec3.UNIT) + (t * Vec3(
             0.5f,
             0.7f,
             1.0f
@@ -47,8 +47,8 @@ fun main() {
     val vertical = Vec3(0.0f, 2.0f, 0.0f)
     val origin = Vec3(0.0f, 0.0f, 0.0f)
 
-    for (j in 0..ny - 1) {
-        for (i in 0..nx - 1) {
+    for (j in 0 until ny) {
+        for (i in 0 until nx) {
             val u = i.toFloat() / nx.toFloat()
             val v = j.toFloat() / ny.toFloat()
 

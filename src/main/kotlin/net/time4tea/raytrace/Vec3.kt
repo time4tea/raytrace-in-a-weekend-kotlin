@@ -3,7 +3,7 @@ package net.time4tea.raytrace
 import kotlin.math.sqrt
 import kotlin.random.Random
 
-class Vec3(private var e0: Float, private var e1: Float, private var e2: Float) {
+class Vec3(private val e0: Float, private val e1: Float, private val e2: Float) {
 
     constructor(e0: Double, e1: Double, e2: Double) : this(e0.toFloat(), e1.toFloat(), e2.toFloat())
 
@@ -13,18 +13,17 @@ class Vec3(private var e0: Float, private var e1: Float, private var e2: Float) 
         fun yy(): (Vec3) -> Float = { it.e1 }
         fun zz(): (Vec3) -> Float = { it.e2 }
 
-        fun UNIT() = Vec3(1.0f, 1.0f, 1.0f)
-        fun ZERO() = Vec3(0f, 0f, 0f)
+        val UNIT = Vec3(1.0f, 1.0f, 1.0f)
+        val ZERO = Vec3(0f, 0f, 0f)
 
         fun random(): Vec3 = Vec3(Random.nextFloat(), Random.nextFloat(), Random.nextFloat())
         fun random_unit_sphere(): Vec3 {
             var p: Vec3
-            do p = 2.0f * random() - UNIT()
+            do p = 2.0f * random() - UNIT
             while (p.squared_length() >= 1.0)
             return p
         }
     }
-
 
     fun x(): Float = e0
     fun y(): Float = e1
@@ -52,24 +51,12 @@ class Vec3(private var e0: Float, private var e1: Float, private var e2: Float) 
         )
     }
 
-    operator fun plusAssign(other: Vec3) {
-        e0 += other.e0
-        e1 += other.e1
-        e2 += other.e2
-    }
-
     operator fun minus(other: Vec3): Vec3 {
         return Vec3(
             e0 - other.e0,
             e1 - other.e1,
             e2 - other.e2
         )
-    }
-
-    operator fun minusAssign(other: Vec3) {
-        e0 -= other.e0
-        e1 -= other.e1
-        e2 -= other.e2
     }
 
     operator fun times(t: Float): Vec3 = Vec3(
@@ -84,12 +71,6 @@ class Vec3(private var e0: Float, private var e1: Float, private var e2: Float) 
             e1 * other.e1,
             e2 * other.e2
         )
-    }
-
-    operator fun timesAssign(other: Vec3) {
-        e0 *= other.e0
-        e1 *= other.e1
-        e2 *= other.e2
     }
 
     operator fun div(other: Vec3): Vec3 {
@@ -108,22 +89,12 @@ class Vec3(private var e0: Float, private var e1: Float, private var e2: Float) 
         )
     }
 
-    operator fun divAssign(other: Vec3) {
-        e0 /= other.e0
-        e1 /= other.e1
-        e2 /= other.e2
-    }
-
-    operator fun timesAssign(f: Float) {
-        e0 *= f
-        e1 *= f
-        e2 *= f
-    }
-
-    operator fun divAssign(f: Float) {
-        e0 /= f
-        e1 /= f
-        e2 /= f
+    operator fun div(s: Int): Vec3 {
+        return Vec3(
+            e0 / s,
+            e1 / s,
+            e2 / s
+        )
     }
 
     fun dot(other: Vec3): Float {
@@ -161,6 +132,10 @@ class Vec3(private var e0: Float, private var e1: Float, private var e2: Float) 
             sqrt(e1),
             sqrt(e2)
         )
+    }
+
+    override fun toString(): String {
+        return "Vec3(e0=$e0, e1=$e1, e2=$e2)"
     }
 }
 

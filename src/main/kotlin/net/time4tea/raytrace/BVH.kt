@@ -10,12 +10,14 @@ class BVH(hitables: List<Hitable>) : Hitable {
 
     init {
         val axis = Random.nextInt(3)
-        val sorted: List<Hitable> = when (axis) {
-            0 -> hitables.sortedWith(compareX())
-            1 -> hitables.sortedWith(compareY())
-            2 -> hitables.sortedWith(compareZ())
-            else -> throw RuntimeException("unexpected item in the bagging area")
-        }
+        val sorted = hitables.sortedWith(
+            when (axis) {
+                0 -> compareX()
+                1 -> compareY()
+                2 -> compareZ()
+                else -> throw RuntimeException("unexpected item in the bagging area")
+            }
+        )
         val size = sorted.size
         when (size) {
             0 -> throw RuntimeException("zero length")
@@ -42,11 +44,12 @@ class BVH(hitables: List<Hitable>) : Hitable {
         fun compareY(): Comparator<Hitable> = compareWithAccessor(Vec3.yy())
         fun compareZ(): Comparator<Hitable> = compareWithAccessor(Vec3.zz())
 
-        private fun compareWithAccessor(f: (Vec3) -> Float): Comparator<Hitable> = Comparator { a: Hitable, b: Hitable ->
-            val abox = a.bbox()!!
-            val bbox = b.bbox()!!
-            f(abox.min()).compareTo(f(bbox.min()))
-        }
+        private fun compareWithAccessor(f: (Vec3) -> Float): Comparator<Hitable> =
+            Comparator { a: Hitable, b: Hitable ->
+                val abox = a.bbox()!!
+                val bbox = b.bbox()!!
+                f(abox.min()).compareTo(f(bbox.min()))
+            }
     }
 
     override fun hit(ray: Ray, min: Float, max: Float): Hit? {
