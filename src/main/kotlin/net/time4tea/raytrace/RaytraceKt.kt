@@ -22,25 +22,23 @@ interface Display {
     fun plot(x: Int, y: Int, colour: Vec3)
 }
 
-class Renderer(private val world: Hitable, private val ns: Int) {
+class Renderer(private val world: Hitable, private val samples: Int, private val max_depth: Int) {
 
-    companion object {
-        private fun colour(ray: Ray, world: Hitable, depth: Int): Vec3 {
-            val hit = world.hit(ray, 0.001f, Float.MAX_VALUE)
-            return if (hit != null) {
-                if (depth < 50) {
-                    hit.material.scatter(ray, hit)?.let { (attenuation, scattered) ->
-                        attenuation * colour(scattered, world, depth + 1)
-                    } ?: Vec3.ZERO
-                } else {
-                    Vec3.ZERO
-                }
-
+    private fun colour(ray: Ray, world: Hitable, depth: Int): Vec3 {
+        val hit = world.hit(ray, 0.001f, Float.MAX_VALUE)
+        return if (hit != null) {
+            if (depth < max_depth) {
+                hit.material.scatter(ray, hit)?.let { (attenuation, scattered) ->
+                    attenuation * colour(scattered, world, depth + 1)
+                } ?: Vec3.ZERO
             } else {
-                val unit_direction = ray.direction().unit()
-                val t = 0.5f * (unit_direction.y() + 1.0f)
-                return ((1.0f - t) * Vec3.UNIT) + (t * Vec3(0.5f, 0.7f, 1.0f))
+                Vec3.ZERO
             }
+
+        } else {
+            val unit_direction = ray.direction().unit()
+            val t = 0.5f * (unit_direction.y() + 1.0f)
+            return ((1.0f - t) * Vec3.UNIT) + (t * Vec3(0.5f, 0.7f, 1.0f))
         }
     }
 
@@ -57,13 +55,13 @@ class Renderer(private val world: Hitable, private val ns: Int) {
 
                 for (i in 0 until nx) {
 
-                    val colour = (0 until ns).fold(
+                    val colour = (0 until samples).fold(
                         Vec3.ZERO
                     ) { running, _ ->
                         val u = (i + Random.nextFloat()) / nx.toFloat()
                         val v = (j + Random.nextFloat()) / ny.toFloat()
                         running + colour(camera.get_ray(u, v), world, 0)
-                    } / ns
+                    } / samples
 
                     row.add(colour.sqrt())
                 }
@@ -136,7 +134,9 @@ fun random_scene(): List<Hitable> {
                             0.5f * (1f + Random.nextFloat())
                         ), 0.5f * Random.nextFloat()
                     )
-                    choose_mat < 0.95 -> Lambertian(Vec3(Random.nextFloat(), Random.nextFloat(), Random.nextFloat()))
+                    choose_mat < 0.95 -> Lambertian(
+                        ConstantTexture(Vec3(Random.nextFloat(), Random.nextFloat(), Random.nextFloat()))
+                    )
                     else -> Dielectric(1.5f)
                 }
 
@@ -149,12 +149,25 @@ fun random_scene(): List<Hitable> {
 
 fun main() {
 
+    val green_white = CheckerTexture(
+        ConstantTexture(Vec3(0.2, 0.3, 0.1)),
+        ConstantTexture(Vec3(0.9, 0.9, 0.9))
+    )
+
+    val earth = ImageTexture(File("src/main/resources/earth.jpg"))
+
     val hitables = listOf(
-        Sphere(Vec3(0f, -1000f, 0f), 1000f, Lambertian(Vec3(0.5f, 0.5f, 0.5f))),
+        Sphere(
+            Vec3(0f, -1000f, 0f), 1000f, Lambertian(green_white)
+        ),
         Sphere(Vec3(0f, 1f, 0f), 1.0f, Dielectric(1.5f)),
-        Sphere(Vec3(-4f, 1f, 0f), 1.0f, Lambertian(Vec3(0.4f, 0.2f, 0.1f))),
+        Sphere(
+            Vec3(-4f, 1f, 0f), 1.0f, Lambertian(
+                earth
+            )
+        ),
         Sphere(Vec3(4f, 1f, 0f), 1.0f, Metal(Vec3(0.7f, 0.6f, 0.5f), 0.0f))
-    ) + HitableList(random_scene())
+    ) + random_scene()
 
     println("Items : ${hitables.size}")
     val world = HitableList(hitables)
@@ -172,7 +185,7 @@ fun main() {
 
     val camera = Camera(lookfrom, lookat, Vec3(0f, 1f, 0f), 20f, aspect, aperture, dist_to_focus)
 
-    val renderer = Renderer(world, 1)
+    val renderer = Renderer(world, 50, 50)
 
     val image = display.image()
 

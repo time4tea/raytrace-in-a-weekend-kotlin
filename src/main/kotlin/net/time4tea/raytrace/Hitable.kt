@@ -6,7 +6,7 @@ interface Hitable {
     fun components(): Int
 }
 
-data class Hit(val t: Float, val p: Vec3, val normal:Vec3, val material: Material)
+data class Hit(val t: Float, val u: Float, val v: Float, val p: Vec3, val normal:Vec3, val material: Material)
 
 class HitableList(private val items: List<Hitable>): Hitable {
     override fun hit(ray: Ray, min: Float, max: Float): Hit? {

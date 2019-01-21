@@ -20,11 +20,11 @@ class Metal(private val albedo: Vec3, private val fuzz: Float) : Material {
     }
 }
 
-class Lambertian(private val albedo: Vec3) : Material {
+class Lambertian(private val albedo: Texture) : Material {
     override fun scatter(input: Ray, hit: Hit): Pair<Vec3, Ray>? {
         val target = hit.p + hit.normal + Vec3.random_unit_sphere()
         return Pair(
-            albedo, Ray(hit.p, target - hit.p)
+            albedo.value(hit.u,hit.v, hit.p), Ray(hit.p, target - hit.p)
         )
     }
 }

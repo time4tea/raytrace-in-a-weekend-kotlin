@@ -52,12 +52,12 @@ fun main() {
             Sphere(
                 Vec3(0.0, 0.0, -1.0),
                 0.5f,
-                Lambertian(Vec3(0.8, 0.3, 0.3))
+                Lambertian(ConstantTexture(Vec3(0.8, 0.3, 0.3)))
             ),
             Sphere(
                 Vec3(0.0, -100.5, -1.0),
                 100f,
-                Lambertian(Vec3(0.8, 0.8, 0.0))
+                Lambertian(ConstantTexture(Vec3(0.8, 0.8, 0.0)))
             ),
             Sphere(
                 Vec3(1.0, 0.0, -1.0),
@@ -72,8 +72,8 @@ fun main() {
         )
     )
 
-    for (j in 0..ny - 1) {
-        for (i in 0..nx - 1) {
+    for (j in 0 until ny) {
+        for (i in 0 until nx) {
             val colour = (0 until ns).fold(
                 Vec3.ZERO
             ) { running, _ ->

@@ -1,5 +1,8 @@
 package net.time4tea.raytrace
 
+import kotlin.math.PI
+import kotlin.math.asin
+import kotlin.math.atan2
 import kotlin.math.sqrt
 import kotlin.random.Random
 
@@ -132,6 +135,16 @@ class Vec3(private val e0: Float, private val e1: Float, private val e2: Float) 
             sqrt(e1),
             sqrt(e2)
         )
+    }
+
+    data class UV(val u: Float, val v: Float)
+
+    fun sphere_uv(): UV {
+        val phi = atan2(z(), x())
+        val theta = asin(y())
+        val u = 1-(phi + PI) / (2*PI)
+        val v = (theta + PI/2) / PI
+        return UV(u.toFloat(),v.toFloat())
     }
 
     override fun toString(): String {

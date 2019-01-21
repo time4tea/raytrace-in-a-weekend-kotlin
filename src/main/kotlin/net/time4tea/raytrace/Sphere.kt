@@ -32,14 +32,18 @@ class Sphere(private val centre: Vec3, private val radius: Float, private val ma
 
             if (temp < max && temp > min) {
                 val p = ray.point_at_parameter(temp)
-                return Hit(temp, p, (p - centre) / radius, material)
+                val normal = (p - centre) / radius
+                val uv = normal.sphere_uv()
+                return Hit(temp, uv.u, uv.v, p, normal, material)
             }
 
             temp = (-b + size) / a
 
             if (temp < max && temp > min) {
                 val p = ray.point_at_parameter(temp)
-                return Hit(temp, p, (p - centre) / radius, material)
+                val normal = (p - centre) / radius
+                val uv = normal.sphere_uv()
+                return Hit(temp, uv.u, uv.v, p, normal, material)
             }
             null
         } else {
