@@ -4,9 +4,9 @@ import kotlin.random.Random
 
 class BVH(hitables: List<Hitable>) : Hitable {
 
-    val box: AABB
-    val left: Hitable
-    val right: Hitable
+    private val box: AABB
+    private val left: Hitable
+    private val right: Hitable
 
     init {
         val axis = Random.nextInt(3)

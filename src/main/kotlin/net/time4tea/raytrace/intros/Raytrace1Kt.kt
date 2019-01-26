@@ -11,8 +11,8 @@ fun main() {
     val nx = display.size().width
     val ny = display.size().height
 
-    for (j in 0..ny-1) {
-        for (i in 0..nx-1) {
+    for (j in 0 until ny) {
+        for (i in 0 until nx) {
             display.plot(
                 i,
                 j,

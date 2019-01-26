@@ -27,7 +27,7 @@ class CheckerTexture(private val t1: Texture, private val t2: Texture) : Texture
     }
 }
 
-class ImageTexture(private val file: File) : Texture {
+class ImageTexture(file: File) : Texture {
 
     private val image: BufferedImage = ImageIO.read(file)
     private val width = image.width

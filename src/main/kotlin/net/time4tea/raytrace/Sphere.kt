@@ -18,6 +18,7 @@ class Sphere(private val centre: Vec3, private val radius: Float, private val ma
     }
 
     override fun hit(ray: Ray, min: Float, max: Float): Hit? {
+
         val origin_centre = ray.origin() - centre
 
         val a = ray.direction().dot(ray.direction())

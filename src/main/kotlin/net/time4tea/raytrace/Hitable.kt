@@ -6,9 +6,9 @@ interface Hitable {
     fun components(): Int
 }
 
-data class Hit(val t: Float, val u: Float, val v: Float, val p: Vec3, val normal:Vec3, val material: Material)
+data class Hit(val t: Float, val u: Float, val v: Float, val p: Vec3, val normal: Vec3, val material: Material)
 
-class HitableList(private val items: List<Hitable>): Hitable {
+class HitableList(private val items: List<Hitable>) : Hitable {
     override fun hit(ray: Ray, min: Float, max: Float): Hit? {
         return items.fold(
             null,
@@ -23,11 +23,11 @@ class HitableList(private val items: List<Hitable>): Hitable {
     }
 
     override fun bbox(): AABB? {
-        if ( items.isEmpty() ) {
+        if (items.isEmpty()) {
             return null
         }
-        var box: AABB = items[0].bbox() ?: return null
-        for ( item in items.drop(1)) {
+        var box = items[0].bbox() ?: return null
+        for (item in items.drop(1)) {
             item.bbox()?.let {
                 box = box.include(it)
             } ?: return null

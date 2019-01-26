@@ -26,8 +26,8 @@ fun main() {
     val vertical = Vec3(0.0f, 2.0f, 0.0f)
     val origin = Vec3(0.0f, 0.0f, 0.0f)
 
-    for (j in 0..ny - 1) {
-        for (i in 0..nx - 1) {
+    for (j in 0 until ny) {
+        for (i in 0 until nx) {
             val u = i.toFloat() / nx.toFloat()
             val v = j.toFloat() / ny.toFloat()
 
