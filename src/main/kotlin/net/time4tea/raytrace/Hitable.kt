@@ -35,3 +35,15 @@ class HitableList(private val items: List<Hitable>) : Hitable {
         return box
     }
 }
+
+class FlipNormals(private val delegate: Hitable): Hitable {
+    override fun hit(ray: Ray, min: Float, max: Float): Hit? {
+        return delegate.hit(ray, min, max)?.let {
+            it.copy(normal = -it.normal)
+        }
+    }
+
+    override fun bbox(): AABB? = delegate.bbox()
+
+    override fun components(): Int = delegate.components()
+}

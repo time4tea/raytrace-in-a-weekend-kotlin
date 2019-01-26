@@ -13,6 +13,7 @@ import javax.swing.JLabel
 import javax.swing.Timer
 import kotlin.random.Random
 
+
 interface Display {
     fun size(): Dimension
     fun plot(x: Int, y: Int, colour: Vec3)
@@ -77,11 +78,15 @@ fun random_scene(): List<Hitable> {
                     else -> Dielectric(1.5f)
                 }
 
-                list.add(Sphere(centre, 0.2f, material))
+                val item = when (Random.nextInt(2)) {
+                    0 -> Sphere(centre, 0.2f, material)
+                    else -> Box(centre - Vec3(0.1, 0.1, 0.1), centre + Vec3(0.1, 0.1, 0.1), material)
+                }
+                list.add(item)
             }
         }
     }
-    return list//.map { MetricHitable(Metrics.globalRegistry, it)}
+    return list
 }
 
 fun main() {
