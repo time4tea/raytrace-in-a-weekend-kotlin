@@ -8,9 +8,10 @@ import javax.imageio.ImageIO
 
 
 fun main() {
-    val world = WeekendFinal().scene()
-    val lookfrom = Vec3(13f, 2f, 3f)
-    val lookat = Vec3(0f, 0f, 0f)
+    val scene = WeekendFinal()
+    val world = scene.scene()
+    val lookfrom = scene.lookfrom()
+    val lookat = scene.lookat()
 
     val dist_to_focus = 10.0f
     val aperture = 0.10f

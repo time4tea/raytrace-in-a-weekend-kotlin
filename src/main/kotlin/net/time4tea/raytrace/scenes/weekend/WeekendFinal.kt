@@ -6,9 +6,14 @@ import kotlin.random.Random
 
 interface Scene{
     fun scene() : Hitable
+    fun lookat(): Vec3
+    fun lookfrom(): Vec3
 }
 
 class WeekendFinal : Scene {
+
+    override fun lookfrom() = Vec3(13f, 2f, 3f)
+    override fun lookat() = Vec3(0f, 0f, 0f)
 
     private fun random_scene(): List<Hitable> {
 
