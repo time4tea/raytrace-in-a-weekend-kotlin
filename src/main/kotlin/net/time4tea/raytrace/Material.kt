@@ -10,6 +10,15 @@ interface Material {
     fun scatter(input: Ray, hit: Hit): Scattered?
 }
 
+class Isotropic(private val texture: Texture) : Material {
+    override fun scatter(input: Ray, hit: Hit): Scattered? {
+        return Scattered(
+            texture.value(hit.u, hit.v, hit.p),
+            Ray(hit.p, Vec3.random_unit_sphere())
+        )
+    }
+}
+
 class Metal(private val albedo: Vec3, private val fuzz: Float) : Material {
     override fun scatter(input: Ray, hit: Hit): Scattered? {
         val reflected = input.direction().unit().reflect(hit.normal)
