@@ -4,16 +4,18 @@ import java.lang.Math.pow
 import kotlin.math.sqrt
 import kotlin.random.Random
 
+data class Scattered(val attenuation: Vec3, val ray: Ray)
+
 interface Material {
-    fun scatter(input: Ray, hit: Hit): Pair<Vec3, Ray>?
+    fun scatter(input: Ray, hit: Hit): Scattered?
 }
 
 class Metal(private val albedo: Vec3, private val fuzz: Float) : Material {
-    override fun scatter(input: Ray, hit: Hit): Pair<Vec3, Ray>? {
+    override fun scatter(input: Ray, hit: Hit): Scattered? {
         val reflected = input.direction().unit().reflect(hit.normal)
         val scattered = Ray(hit.p, reflected + Vec3.random_unit_sphere() * fuzz)
         return if (scattered.direction().dot(hit.normal) > 0.0) {
-            Pair(albedo, scattered)
+            Scattered(albedo, scattered)
         } else {
             null
         }
@@ -21,9 +23,9 @@ class Metal(private val albedo: Vec3, private val fuzz: Float) : Material {
 }
 
 class Lambertian(private val albedo: Texture) : Material {
-    override fun scatter(input: Ray, hit: Hit): Pair<Vec3, Ray>? {
+    override fun scatter(input: Ray, hit: Hit): Scattered? {
         val target = hit.p + hit.normal + Vec3.random_unit_sphere()
-        return Pair(
+        return Scattered(
             albedo.value(hit.u,hit.v, hit.p), Ray(hit.p, target - hit.p)
         )
     }
@@ -37,7 +39,7 @@ class Dielectric(private val ri: Float) : Material {
         return r0 + (1 - r0) * pow(1 - cosine.toDouble(), 5.0).toFloat()
     }
 
-    override fun scatter(input: Ray, hit: Hit): Pair<Vec3, Ray>? {
+    override fun scatter(input: Ray, hit: Hit): Scattered? {
         val reflected = input.direction().reflect(hit.normal)
 
         val attenuation = Vec3.UNIT
@@ -66,9 +68,9 @@ class Dielectric(private val ri: Float) : Material {
         }
 
         return if (Random.nextFloat() < reflect_prob) {
-            Pair(attenuation, Ray(hit.p, reflected))
+            Scattered(attenuation, Ray(hit.p, reflected))
         } else {
-            Pair(attenuation, Ray(hit.p, refracted!!))
+            Scattered(attenuation, Ray(hit.p, refracted!!))
         }
     }
 }
