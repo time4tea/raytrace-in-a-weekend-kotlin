@@ -42,6 +42,8 @@ class Lambertian(private val albedo: Texture) : Material {
 
 class Dielectric(private val ri: Float) : Material {
 
+    constructor(ri: Double): this(ri.toFloat())
+
     private fun schlick(cosine: Float, ref_idx: Float): Float {
         var r0 = (1 - ref_idx) / (1 + ref_idx)
         r0 *= r0

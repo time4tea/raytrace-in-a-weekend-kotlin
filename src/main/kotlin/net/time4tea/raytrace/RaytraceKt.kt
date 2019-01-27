@@ -1,57 +1,11 @@
 package net.time4tea.raytrace
 
-import java.awt.Color
-import java.awt.Dimension
-import java.awt.image.BufferedImage
 import java.io.File
 import java.time.Duration
 import java.time.Instant
 import javax.imageio.ImageIO
-import javax.swing.ImageIcon
-import javax.swing.JFrame
-import javax.swing.JLabel
-import javax.swing.Timer
 import kotlin.random.Random
 
-
-interface Display {
-    fun size(): Dimension
-    fun plot(x: Int, y: Int, colour: Vec3)
-}
-
-class SwingFrame(image: BufferedImage) : JFrame() {
-
-    private val icon = JLabel(ImageIcon(image))
-    private val timer = Timer(50) { icon.repaint() }
-
-    init {
-        title = "something"
-        defaultCloseOperation = EXIT_ON_CLOSE
-        contentPane.add(icon)
-
-        timer.start()
-
-        pack()
-        isVisible = true
-    }
-}
-
-class BufferedImageDisplay(private val width: Int, private val height: Int) : Display {
-
-    private val bufferedImage = BufferedImage(width, height, BufferedImage.TYPE_INT_RGB)
-
-    override fun size(): Dimension {
-        return Dimension(width, height)
-    }
-
-    override fun plot(x: Int, y: Int, colour: Vec3) {
-        bufferedImage.setRGB(x, height - (y + 1), Color(colour.r(), colour.g(), colour.b()).rgb)
-    }
-
-    fun image(): BufferedImage {
-        return bufferedImage
-    }
-}
 
 fun random_scene(): List<Hitable> {
 
@@ -100,20 +54,24 @@ fun main() {
 
     val hitables = listOf(
         Sphere(
-            Vec3(0f, -1000f, 0f), 1000f, Lambertian(green_white)
+            Vec3(0, -1000, 0), 1000f, Lambertian(green_white)
         ),
-        Sphere(Vec3(0f, 1f, 0f), 1.0f, Dielectric(1.5f)),
+        Sphere(Vec3(0, 1, 0), 1.0f, Dielectric(1.5)),
         Sphere(
-            Vec3(-4f, 1f, 0f), 1.0f, Lambertian(
+            Vec3(-4, 1, 0), 1.0f, Lambertian(
                 earth
             )
         ),
-        Sphere(Vec3(4f, 1f, 0f), 1.0f, Metal(Vec3(0.7f, 0.6f, 0.5f), 0.0f))
+        Sphere(Vec3(4, 1, 0), 1.0f, Metal(Vec3(0.7, 0.6, 0.5), 0.0f))
+//        ConstantMedium(
+//            Sphere(Vec3(360, 150, 145), 70.0f, Dielectric(1.5)),
+//            0.2f,
+//            ConstantTexture(Vec3(0.2, 0.4, 0.9))
+//        )
     ) + random_scene()
 
     println("Items : ${hitables.size}")
     val world = BVH(hitables)
-
     println("BVH Items : ${world.components()}")
     val lookfrom = Vec3(13f, 2f, 3f)
     val lookat = Vec3(0f, 0f, 0f)
@@ -121,8 +79,7 @@ fun main() {
     val dist_to_focus = 10.0f
     val aperture = 0.10f
 
-    val display = BufferedImageDisplay(1200, 800)
-
+    val display = BufferedImageDisplay(640, 480)
     val aspect = display.size().width.toFloat() / display.size().height.toFloat()
 
     val camera = Camera(lookfrom, lookat, Vec3(0f, 1f, 0f), 20f, aspect, aperture, dist_to_focus)

@@ -9,6 +9,7 @@ import kotlin.random.Random
 class Vec3(private val e0: Float, private val e1: Float, private val e2: Float) {
 
     constructor(e0: Double, e1: Double, e2: Double) : this(e0.toFloat(), e1.toFloat(), e2.toFloat())
+    constructor(e0: Int, e1: Int, e2: Int) : this(e0.toFloat(), e1.toFloat(), e2.toFloat())
 
     companion object {
 
