@@ -37,12 +37,8 @@ class ScaledDisplay(private val scale: Int, private val display: Display) : Disp
     }
 
     override fun plot(x: Int, y: Int, colour: Vec3) {
-        val startx = x * scale
-        val starty = y * scale
-        val endx = (x + 1) * scale
-        val endy = (y + 1) * scale
-        (startx until endx).forEach { pix ->
-            (starty until endy).forEach { piy ->
+        for (pix in x * scale until (x + 1) * scale) {
+            for (piy in y * scale until (y + 1) * scale) {
                 display.plot(pix, piy, colour)
             }
         }
