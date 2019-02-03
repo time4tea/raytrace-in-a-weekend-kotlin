@@ -21,14 +21,14 @@ fun main() {
 
     val camera = Camera(lookfrom, lookat, Vec3(0f, 1f, 0f), 20f, aspect, aperture, dist_to_focus)
 
-    val renderer = Renderer(world, 100, 50, scene.constantLight())
+    val renderer = Renderer(world, 10, 50, scene.constantLight())
 
     val image = display.image()
 
     SwingFrame(image)
     val start = Instant.now()
 
-    renderer.render(camera, display)
+    renderer.render(camera, ScaledDisplay(2, display))
 
     val duration = Duration.between(start, Instant.now())
     println("Duration was $duration")

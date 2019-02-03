@@ -30,6 +30,25 @@ class SwingFrame(image: BufferedImage) : JFrame() {
     }
 }
 
+class ScaledDisplay(private val scale: Int, private val display: Display) : Display {
+    override fun size(): Dimension {
+        val original = display.size()
+        return Dimension(original.width / scale, original.height / scale)
+    }
+
+    override fun plot(x: Int, y: Int, colour: Vec3) {
+        val startx = x * scale
+        val starty = y * scale
+        val endx = (x + 1) * scale
+        val endy = (y + 1) * scale
+        (startx until endx).forEach { pix ->
+            (starty until endy).forEach { piy ->
+                display.plot(pix, piy, colour)
+            }
+        }
+    }
+}
+
 class BufferedImageDisplay(private val width: Int, private val height: Int) : Display {
 
     private val bufferedImage = BufferedImage(width, height, BufferedImage.TYPE_INT_RGB)
