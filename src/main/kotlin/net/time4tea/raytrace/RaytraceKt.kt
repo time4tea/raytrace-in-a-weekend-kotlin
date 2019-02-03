@@ -14,14 +14,14 @@ fun main() {
     val lookat = scene.lookat()
 
     val dist_to_focus = 10.0f
-    val aperture = 0.10f
+    val aperture = 0.00f
 
     val display = BufferedImageDisplay(640, 480)
     val aspect = display.size().width.toFloat() / display.size().height.toFloat()
 
     val camera = Camera(lookfrom, lookat, Vec3(0f, 1f, 0f), 20f, aspect, aperture, dist_to_focus)
 
-    val renderer = Renderer(world, 50, 50)
+    val renderer = Renderer(world, 100, 50, scene.constantLight())
 
     val image = display.image()
 

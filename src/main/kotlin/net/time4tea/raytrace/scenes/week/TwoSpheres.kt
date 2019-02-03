@@ -1,7 +1,7 @@
 package net.time4tea.raytrace.scenes.week
 
 import net.time4tea.raytrace.*
-import net.time4tea.raytrace.scenes.weekend.Scene
+import net.time4tea.raytrace.Scene
 
 class TwoSpheres : Scene {
     override fun scene(): Hitable {

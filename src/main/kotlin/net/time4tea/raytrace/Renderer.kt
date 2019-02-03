@@ -6,28 +6,24 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
 import kotlin.random.Random
 
-class Renderer(private val world: Hitable, private val samples: Int, private val max_depth: Int) {
+class Renderer(
+    private val world: Hitable,
+    private val samples: Int,
+    private val max_depth: Int,
+    private val constantLight: (Vec3) -> Vec3 = { Vec3.ZERO }
+) {
 
     private fun colour(ray: Ray, world: Hitable, depth: Int): Vec3 {
-        val hit = world.hit(ray, 0.001f, Float.MAX_VALUE)
-        return if (hit != null) {
+        return world.hit(ray, 0.001f, Float.MAX_VALUE)?.let { hit ->
+            val emitted = hit.material.emitted(hit.u, hit.v, hit.p)
             if (depth < max_depth) {
                 hit.material.scatter(ray, hit)?.let { (attenuation, scattered) ->
-                    attenuation * colour(scattered, world, depth + 1)
-                } ?: Vec3.ZERO
+                    emitted + attenuation * colour(scattered, world, depth + 1)
+                } ?: emitted
             } else {
-                Vec3.ZERO
+                emitted
             }
-
-        } else {
-            val unit_direction = ray.direction().unit()
-            val t = 0.5f * (unit_direction.y() + 1.0f)
-            return ((1.0f - t) * Vec3.UNIT) + (t * Vec3(
-                0.5f,
-                0.7f,
-                1.0f
-            ))
-        }
+        } ?: constantLight(ray.direction())
     }
 
     fun render(camera: Camera, display: Display) {

@@ -8,6 +8,12 @@ data class Scattered(val attenuation: Vec3, val ray: Ray)
 
 interface Material {
     fun scatter(input: Ray, hit: Hit): Scattered?
+    fun emitted(u: Float, v: Float, p: Vec3): Vec3 = Vec3.ZERO
+}
+
+class DiffuseLight(private val texture: Texture): Material {
+    override fun scatter(input: Ray, hit: Hit): Scattered? = null
+    override fun emitted(u: Float, v: Float, p: Vec3): Vec3 = texture.value(u,v,p)
 }
 
 class Isotropic(private val texture: Texture) : Material {
@@ -31,11 +37,11 @@ class Metal(private val albedo: Vec3, private val fuzz: Float) : Material {
     }
 }
 
-class Lambertian(private val albedo: Texture) : Material {
+class Lambertian(private val texture: Texture) : Material {
     override fun scatter(input: Ray, hit: Hit): Scattered? {
         val target = hit.p + hit.normal + Vec3.random_unit_sphere()
         return Scattered(
-            albedo.value(hit.u,hit.v, hit.p), Ray(hit.p, target - hit.p)
+            texture.value(hit.u,hit.v, hit.p), Ray(hit.p, target - hit.p)
         )
     }
 }

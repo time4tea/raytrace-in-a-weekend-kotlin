@@ -3,21 +3,12 @@ package net.time4tea.raytrace.scenes.weekend
 import net.time4tea.raytrace.*
 import java.io.File
 
-fun constantLighting(direction: Vec3): Vec3 {
-    val unit_direction = direction.unit()
-    val t = 0.5f * (unit_direction.y() + 1.0f)
-    return ((1.0f - t) * Vec3.UNIT) + (t * Vec3(
-        0.5f,
-        0.7f,
-        1.0f
-    ))
-}
 
-class WeekendFinal : Scene {
+
+class WeekendFinalLights : Scene {
 
     override fun lookfrom() = Vec3(13f, 2f, 3f)
     override fun lookat() = Vec3(0f, 0f, 0f)
-    override fun constantLight(): (Vec3) -> Vec3 = {it -> constantLighting(it) }
 
     override fun scene(): Hitable {
         val green_white = CheckerTexture(
@@ -32,7 +23,10 @@ class WeekendFinal : Scene {
                 BVH(
                     listOf(
                         Sphere(
-                            Vec3(0, -1000, 0), 1000f, Lambertian(green_white)
+                            Vec3(0, -1000, 0), 1000f, DiffuseLight(green_white)
+                        ),
+                        Sphere(
+                            Vec3(0, -0, 0), 10000f, Metal(Vec3(0.5f, 0.7f, 1.0f), 1.0f)
                         ),
                         Sphere(Vec3(0, 1, 0), 1.0f, Dielectric(1.5)),
                         Sphere(
@@ -42,9 +36,8 @@ class WeekendFinal : Scene {
                         ),
                         Sphere(Vec3(4, 1, 0), 1.0f, Metal(Vec3(0.7, 0.6, 0.5), 0.0f))
                     )
-                ), RandomScene().scene()
-            )
+                )
+            )+ RandomScene().scene()
         )
     }
-
 }
