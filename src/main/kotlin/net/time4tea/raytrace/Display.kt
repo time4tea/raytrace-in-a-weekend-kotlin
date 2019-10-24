@@ -19,7 +19,7 @@ class SwingFrame(image: BufferedImage) : JFrame() {
     private val timer = Timer(50) { icon.repaint() }
 
     init {
-        title = "something"
+        title = "Raytrace in a week/weekend"
         defaultCloseOperation = EXIT_ON_CLOSE
         contentPane.add(icon)
 
