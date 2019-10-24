@@ -22,7 +22,7 @@ fun main() {
 
     val camera = Camera(lookfrom, lookat, Vec3(0f, 1f, 0f), fov, aspect, aperture, dist_to_focus)
 
-    val renderer = Renderer(world, 100, 50, scene.constantLight())
+    val renderer = Renderer(world, 100, 100, scene.constantLight())
 
     val image = display.image()
 
