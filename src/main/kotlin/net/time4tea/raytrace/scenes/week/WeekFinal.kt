@@ -33,7 +33,7 @@ class WeekFinal : Scene {
             )
         )
 
-        val light = DiffuseLight(ConstantTexture(Vec3(1,1,1)))
+        val light = DiffuseLight(ConstantTexture(Vec3(1, 1, 1)))
 
         world.add(XZ_Rect(123f, 423f, 147f, 412f, 554f, light))
 
@@ -55,13 +55,17 @@ class WeekFinal : Scene {
         val smallSpheres = BVH(
             (0 until 1000).map {
                 Sphere(
-                    Vec3(165 * Random.nextFloat(), 165 * Random.nextFloat(), 165 * Random.nextFloat()),
-                    10f,
+                    Vec3(
+                        165 * Random.nextFloat(),
+                        165 * Random.nextFloat(),
+                        165 * Random.nextFloat()
+                    ),
+                    10 * Random.nextFloat(),
                     white
                 )
             }
         )
-        world.add(smallSpheres)
+        world.add(Translate(RotateY(smallSpheres, 15f), Vec3(-100, 270, 395)))
 
         return BVH(world)
     }

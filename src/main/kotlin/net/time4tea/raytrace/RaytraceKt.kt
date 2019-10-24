@@ -17,7 +17,7 @@ fun main() {
     val aperture = 0.00f
     val fov = 40f
 
-    val display = BufferedImageDisplay(640, 480)
+    val display = BufferedImageDisplay(1024, 768)
     val aspect = display.size().width.toFloat() / display.size().height.toFloat()
 
     val camera = Camera(lookfrom, lookat, Vec3(0f, 1f, 0f), fov, aspect, aperture, dist_to_focus)

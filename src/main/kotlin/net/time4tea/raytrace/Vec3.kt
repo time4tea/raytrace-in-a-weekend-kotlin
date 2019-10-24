@@ -101,6 +101,18 @@ class Vec3(private val e0: Float, private val e1: Float, private val e2: Float) 
         )
     }
 
+    fun withX(x: Float): Vec3 {
+        return Vec3(x, e1, e2)
+    }
+
+    fun withY(y: Float): Vec3 {
+        return Vec3(e0, y, e2)
+    }
+
+    fun withZ(z: Float): Vec3 {
+        return Vec3(e0, e1, z)
+    }
+
     fun dot(other: Vec3): Float {
         return e0 * other.e0 + e1 * other.e1 + e2 * other.e2
     }
@@ -143,9 +155,9 @@ class Vec3(private val e0: Float, private val e1: Float, private val e2: Float) 
     fun sphere_uv(): UV {
         val phi = atan2(z(), x())
         val theta = asin(y())
-        val u = 1-(phi + PI) / (2*PI)
-        val v = (theta + PI/2) / PI
-        return UV(u.toFloat(),v.toFloat())
+        val u = 1 - (phi + PI) / (2 * PI)
+        val v = (theta + PI / 2) / PI
+        return UV(u.toFloat(), v.toFloat())
     }
 
     override fun toString(): String {
