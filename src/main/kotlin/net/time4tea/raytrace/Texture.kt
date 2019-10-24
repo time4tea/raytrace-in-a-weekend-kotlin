@@ -27,6 +27,15 @@ class CheckerTexture(private val t1: Texture, private val t2: Texture) : Texture
     }
 }
 
+class NoiseTexture(private val scale: Float) : Texture {
+
+    private val noise = Perlin()
+
+    override fun value(u: Float, v: Float, p: Vec3): Vec3 {
+        return Vec3.UNIT * 0.5f * (1 + sin(scale * p.x() + 5 * noise.turb(scale * p)))
+    }
+}
+
 class ImageTexture(file: File) : Texture {
 
     private val image: BufferedImage = ImageIO.read(file)
