@@ -4,16 +4,16 @@ import java.lang.Math.pow
 import kotlin.math.sqrt
 import kotlin.random.Random
 
-data class Scattered(val attenuation: Vec3, val ray: Ray)
+data class Scattered(val attenuation: Colour, val ray: Ray)
 
 interface Material {
     fun scatter(input: Ray, hit: Hit): Scattered?
-    fun emitted(u: Float, v: Float, p: Vec3): Vec3 = Vec3.ZERO
+    fun emitted(u: Float, v: Float, p: Vec3): Colour = Colour.BLACK
 }
 
 class DiffuseLight(private val texture: Texture): Material {
     override fun scatter(input: Ray, hit: Hit): Scattered? = null
-    override fun emitted(u: Float, v: Float, p: Vec3): Vec3 = texture.value(u,v,p)
+    override fun emitted(u: Float, v: Float, p: Vec3): Colour = texture.value(u,v,p)
 }
 
 class Isotropic(private val texture: Texture) : Material {
@@ -25,7 +25,7 @@ class Isotropic(private val texture: Texture) : Material {
     }
 }
 
-class Metal(private val albedo: Vec3, private val fuzz: Float) : Material {
+class Metal(private val albedo: Colour, private val fuzz: Float) : Material {
     override fun scatter(input: Ray, hit: Hit): Scattered? {
         val reflected = input.direction().unit().reflect(hit.normal)
         val scattered = Ray(hit.p, reflected + Vec3.random_unit_sphere() * fuzz)
@@ -59,7 +59,7 @@ class Dielectric(private val ri: Float) : Material {
     override fun scatter(input: Ray, hit: Hit): Scattered? {
         val reflected = input.direction().reflect(hit.normal)
 
-        val attenuation = Vec3.UNIT
+        val attenuation = Colour.WHITE
 
         val cosine: Float
         val outward_normal: Vec3

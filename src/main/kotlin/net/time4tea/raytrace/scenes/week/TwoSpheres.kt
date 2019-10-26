@@ -1,12 +1,11 @@
 package net.time4tea.raytrace.scenes.week
 
 import net.time4tea.raytrace.*
-import net.time4tea.raytrace.Scene
 
 class TwoSpheres : Scene {
     override fun scene(): Hitable {
         val checker = CheckerTexture(
-            ConstantTexture(Vec3(0.2, 0.3, 0.1)), ConstantTexture(Vec3(0.9, 0.9, 0.9))
+            ConstantTexture(Colour(0.2, 0.3, 0.1)), ConstantTexture(Colour(0.9, 0.9, 0.9))
         );
 
         return BVH(

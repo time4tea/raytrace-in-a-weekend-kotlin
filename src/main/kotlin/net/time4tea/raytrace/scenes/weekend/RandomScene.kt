@@ -21,14 +21,14 @@ class RandomScene : Scene {
 
                     val material = when {
                         choose_mat < 0.8 -> Metal(
-                            Vec3(
+                            Colour(
                                 0.5f * (1f + Random.nextFloat()),
                                 0.5f * (1f + Random.nextFloat()),
                                 0.5f * (1f + Random.nextFloat())
                             ), 0.5f * Random.nextFloat()
                         )
                         choose_mat < 0.95 -> Lambertian(
-                            ConstantTexture(Vec3(Random.nextFloat(), Random.nextFloat(), Random.nextFloat()))
+                            ConstantTexture(Colour(Random.nextFloat(), Random.nextFloat(), Random.nextFloat()))
                         )
                         else -> Dielectric(1.5f)
                     }

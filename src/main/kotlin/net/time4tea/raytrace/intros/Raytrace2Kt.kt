@@ -4,11 +4,11 @@ import net.time4tea.raytrace.*
 
 
 fun main() {
-    fun colour(ray: Ray): Vec3 {
+    fun colour(ray: Ray): Colour {
         val unit_direction = ray.direction().unit()
         val t = 0.5f * (unit_direction.y() + 1.0f)
         println(t)
-        return ((1.0f - t) * Vec3.UNIT) + (t * Vec3(
+        return ((1.0f - t) * Colour.WHITE) + (t * Colour(
             0.5f,
             0.7f,
             1.0f

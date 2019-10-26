@@ -14,14 +14,14 @@ fun main() {
         return discriminant > 0
     }
 
-    fun colour(ray: Ray): Vec3 {
+    fun colour(ray: Ray): Colour {
 
         if ( hit_sphere(Vec3(0f, 0f, -1f), 0.5f, ray)) {
-            return Vec3(1.0f, 0.0f, 0.0f)
+            return Colour(1.0f, 0.0f, 0.0f)
         }
         val unit_direction = ray.direction().unit()
         val t = 0.5f * (unit_direction.y() + 1.0f)
-        return ((1.0f - t) * Vec3.UNIT) + (t * Vec3(
+        return ((1.0f - t) * Colour.WHITE) + (t * Colour(
             0.5f,
             0.7f,
             1.0f

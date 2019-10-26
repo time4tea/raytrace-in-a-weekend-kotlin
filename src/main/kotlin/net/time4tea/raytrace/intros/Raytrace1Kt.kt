@@ -1,8 +1,8 @@
 package net.time4tea.raytrace.intros
 
 import net.time4tea.raytrace.BufferedImageDisplay
+import net.time4tea.raytrace.Colour
 import net.time4tea.raytrace.SwingFrame
-import net.time4tea.raytrace.Vec3
 
 fun main() {
     val display = BufferedImageDisplay(200, 100)
@@ -16,7 +16,7 @@ fun main() {
             display.plot(
                 i,
                 j,
-                Vec3(
+                Colour(
                     i.toFloat() / nx.toFloat(),
                     j.toFloat() / ny.toFloat(),
                     0.2f

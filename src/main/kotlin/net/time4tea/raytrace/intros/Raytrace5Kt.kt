@@ -16,21 +16,21 @@ fun main() {
         }
     }
 
-    fun colour(ray: Ray, world: Hitable, depth: Int): Vec3 {
+    fun colour(ray: Ray, world: Hitable, depth: Int): Colour {
         val hit = world.hit(ray, 0.0001f, Float.MAX_VALUE)
 
         if (hit != null) {
             return if (depth < 50) {
                 hit.material.scatter(ray, hit)?.let { (attenuation, scattered) ->
                     attenuation * colour(scattered, world, depth + 1)
-                } ?: Vec3.ZERO
+                } ?: Colour.BLACK
             } else {
-                Vec3.ZERO
+                Colour.BLACK
             }
         } else {
             val unit_direction = ray.direction().unit()
             val t = 0.5f * (unit_direction.y() + 1.0f)
-            return ((1.0f - t) * Vec3.UNIT) + (t * Vec3(
+            return ((1.0f - t) * Colour.WHITE) + (t * Colour(
                 0.5f,
                 0.7f,
                 1.0f
@@ -52,22 +52,22 @@ fun main() {
             Sphere(
                 Vec3(0.0, 0.0, -1.0),
                 0.5f,
-                Lambertian(ConstantTexture(Vec3(0.8, 0.3, 0.3)))
+                Lambertian(ConstantTexture(Colour(0.8, 0.3, 0.3)))
             ),
             Sphere(
                 Vec3(0.0, -100.5, -1.0),
                 100f,
-                Lambertian(ConstantTexture(Vec3(0.8, 0.8, 0.0)))
+                Lambertian(ConstantTexture(Colour(0.8, 0.8, 0.0)))
             ),
             Sphere(
                 Vec3(1.0, 0.0, -1.0),
                 0.5f,
-                Metal(Vec3(0.8, 0.6, 0.2), 0.0f)
+                Metal(Colour(0.8, 0.6, 0.2), 0.0f)
             ),
             Sphere(
                 Vec3(-1.0, 0.0, -1.0),
                 0.5f,
-                Metal(Vec3(0.8, 0.8, 0.8), 0.0f)
+                Metal(Colour(0.8, 0.8, 0.8), 0.0f)
             )
         )
     )
@@ -75,7 +75,7 @@ fun main() {
     for (j in 0 until ny) {
         for (i in 0 until nx) {
             val colour = (0 until ns).fold(
-                Vec3.ZERO
+                Colour.BLACK
             ) { running, _ ->
                 val u = i.toFloat() / nx.toFloat()
                 val v = j.toFloat() / ny.toFloat()

@@ -10,10 +10,10 @@ class Renderer(
     private val world: Hitable,
     private val samples: Int,
     private val max_depth: Int,
-    private val constantLight: (Vec3) -> Vec3 = { Vec3.ZERO }
+    private val constantLight: (Vec3) -> Colour = { Colour.BLACK }
 ) {
 
-    private fun colour(ray: Ray, world: Hitable, depth: Int): Vec3 {
+    private fun colour(ray: Ray, world: Hitable, depth: Int): Colour {
         return world.hit(ray, 0.001f, Float.MAX_VALUE)?.let { hit ->
             val emitted = hit.material.emitted(hit.u, hit.v, hit.p)
             if (depth < max_depth) {
@@ -31,16 +31,16 @@ class Renderer(
         val nx = display.size().width
         val ny = display.size().height
 
-        val jobs = mutableListOf<Deferred<Pair<Int, List<Vec3>>>>()
+        val jobs = mutableListOf<Deferred<Pair<Int, List<Colour>>>>()
 
         for (j in 0 until ny) {
             jobs.add(GlobalScope.async {
-                val row = mutableListOf<Vec3>()
+                val row = mutableListOf<Colour>()
 
                 for (i in 0 until nx) {
 
                     val colour = (0 until samples).fold(
-                        Vec3.ZERO
+                        Colour.BLACK
                     ) { running, _ ->
                         val u = (i + Random.nextFloat()) / nx.toFloat()
                         val v = (j + Random.nextFloat()) / ny.toFloat()

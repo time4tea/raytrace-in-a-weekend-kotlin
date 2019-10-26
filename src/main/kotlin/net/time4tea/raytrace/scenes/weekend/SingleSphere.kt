@@ -7,7 +7,7 @@ class SingleSphere : Scene {
         val boundary = Sphere(Vec3(0, 0, 0), 70f, Dielectric(1.5))
         return BVH(
             listOf(
-                ConstantMedium(boundary, 0.2f, ConstantTexture(Vec3(0.2, 0.4, 0.9)))
+                ConstantMedium(boundary, 0.2f, ConstantTexture(Colour(0.2, 0.4, 0.9)))
             )
         )
     }

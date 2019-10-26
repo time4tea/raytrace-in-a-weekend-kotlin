@@ -7,17 +7,17 @@ import javax.imageio.ImageIO
 import kotlin.math.sin
 
 interface Texture {
-    fun value(u: Float, v: Float, p: Vec3): Vec3
+    fun value(u: Float, v: Float, p: Vec3): Colour
 }
 
-class ConstantTexture(private val colour: Vec3) : Texture {
-    override fun value(u: Float, v: Float, p: Vec3): Vec3 {
+class ConstantTexture(private val colour: Colour) : Texture {
+    override fun value(u: Float, v: Float, p: Vec3): Colour {
         return colour
     }
 }
 
 class CheckerTexture(private val t1: Texture, private val t2: Texture) : Texture {
-    override fun value(u: Float, v: Float, p: Vec3): Vec3 {
+    override fun value(u: Float, v: Float, p: Vec3): Colour {
         val sines = sin(10 * p.x()) * sin(10 * p.y()) * sin(10 * p.z())
         return if (sines < 0) {
             t1.value(u, v, p)
@@ -31,8 +31,8 @@ class NoiseTexture(private val scale: Float) : Texture {
 
     private val noise = Perlin()
 
-    override fun value(u: Float, v: Float, p: Vec3): Vec3 {
-        return Vec3.UNIT * 0.5f * (1 + sin(scale * p.x() + 5 * noise.turb(scale * p)))
+    override fun value(u: Float, v: Float, p: Vec3): Colour {
+        return Colour.WHITE * 0.5f * (1 + sin(scale * p.x() + 5 * noise.turb(scale * p)))
     }
 }
 
@@ -42,7 +42,7 @@ class ImageTexture(file: File) : Texture {
     private val width = image.width
     private val height = image.height
 
-    override fun value(u: Float, v: Float, p: Vec3): Vec3 {
+    override fun value(u: Float, v: Float, p: Vec3): Colour {
         var x = (u * width).toInt()
         var y = ((1 - v) * height).toInt()
 
@@ -53,6 +53,6 @@ class ImageTexture(file: File) : Texture {
         if (y > height - 1) y = height - 1
 
         val pixel = Color(image.getRGB(x, y))
-        return Vec3(pixel.red / 255.0, pixel.green / 255.0, pixel.blue / 255.0)
+        return Colour(pixel.red / 255.0, pixel.green / 255.0, pixel.blue / 255.0)
     }
 }

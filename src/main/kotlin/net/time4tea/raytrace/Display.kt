@@ -10,7 +10,7 @@ import javax.swing.Timer
 
 interface Display {
     fun size(): Dimension
-    fun plot(x: Int, y: Int, colour: Vec3)
+    fun plot(x: Int, y: Int, colour: Colour)
 }
 
 class SwingFrame(image: BufferedImage) : JFrame() {
@@ -44,7 +44,7 @@ class ScaledDisplay(private val scale: Int, private val delegate: Display) : Dis
                     return Dimension(original.width / scale, original.height / scale)
                 }
 
-                override fun plot(x: Int, y: Int, colour: Vec3) {
+                override fun plot(x: Int, y: Int, colour: Colour) {
                     for (pix in x * scale until (x + 1) * scale) {
                         for (piy in y * scale until (y + 1) * scale) {
                             delegate.plot(pix, piy, colour)
@@ -59,7 +59,7 @@ class ScaledDisplay(private val scale: Int, private val delegate: Display) : Dis
         return display.size()
     }
 
-    override fun plot(x: Int, y: Int, colour: Vec3) {
+    override fun plot(x: Int, y: Int, colour: Colour) {
         display.plot(x, y, colour)
     }
 }
@@ -72,7 +72,7 @@ class BufferedImageDisplay(private val width: Int, private val height: Int) : Di
         return Dimension(width, height)
     }
 
-    override fun plot(x: Int, y: Int, colour: Vec3) {
+    override fun plot(x: Int, y: Int, colour: Colour) {
         bufferedImage.setRGB(x, height - (y + 1), Color(colour.r(), colour.g(), colour.b()).rgb)
     }
 
