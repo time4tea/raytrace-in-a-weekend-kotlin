@@ -34,5 +34,6 @@ fun main() {
     val duration = Duration.between(start, Instant.now())
     println("Duration was $duration")
 
-    ImageIO.write(image, "PNG", File("output.png"))
+    val scene_name = scene.javaClass.simpleName.toLowerCase()
+    ImageIO.write(image, "PNG", File("example-output/$scene_name.png"))
 }
