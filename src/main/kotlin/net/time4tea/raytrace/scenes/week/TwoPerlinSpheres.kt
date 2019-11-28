@@ -3,18 +3,16 @@ package net.time4tea.raytrace.scenes.week
 import net.time4tea.raytrace.*
 import net.time4tea.raytrace.scenes.weekend.constantLighting
 
-class TwoSpheres : Scene {
+class TwoPerlinSpheres : Scene {
     override fun constantLight(): (Vec3) -> Colour = {it -> constantLighting(it) }
 
     override fun scene(): Hitable {
-        val checker = CheckerTexture(
-            ConstantTexture(Colour(0.2, 0.3, 0.1)), ConstantTexture(Colour(0.9, 0.9, 0.9))
-        );
+        val perlin = NoiseTexture(0.6f)
 
         return BVH(
             listOf(
-                Sphere(Vec3(0, -10, 0), 10f, Lambertian(checker)),
-                Sphere(Vec3(0, 10, 0), 10f, Lambertian(checker))
+                Sphere(Vec3(0,-1000, 0), 1000f, Lambertian(perlin)),
+                Sphere(Vec3(0, 2, 0), 2f, Lambertian(perlin))
             )
         )
     }

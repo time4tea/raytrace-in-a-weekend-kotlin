@@ -1,6 +1,6 @@
 package net.time4tea.raytrace
 
-import net.time4tea.raytrace.scenes.week.WeekFinal
+import net.time4tea.raytrace.scenes.week.TwoPerlinSpheres
 import java.io.File
 import java.time.Duration
 import java.time.Instant
@@ -8,7 +8,7 @@ import javax.imageio.ImageIO
 
 
 fun main() {
-    val scene = WeekFinal()
+    val scene = TwoPerlinSpheres()
     val world = scene.scene()
     val lookfrom = scene.lookfrom()
     val lookat = scene.lookat()
@@ -17,7 +17,7 @@ fun main() {
     val aperture = 0.00f
     val fov = 40f
 
-    val display = BufferedImageDisplay(1024, 768)
+    val display = BufferedImageDisplay(800, 800)
     val aspect = display.size().width.toFloat() / display.size().height.toFloat()
 
     val camera = Camera(lookfrom, lookat, Vec3(0f, 1f, 0f), fov, aspect, aperture, dist_to_focus)
