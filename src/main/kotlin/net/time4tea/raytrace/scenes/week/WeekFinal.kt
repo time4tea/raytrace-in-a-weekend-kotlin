@@ -1,16 +1,11 @@
 package net.time4tea.raytrace.scenes.week
 
 import net.time4tea.raytrace.*
-import net.time4tea.raytrace.scenes.weekend.constantLighting
 import java.io.File
 import kotlin.random.Random
 
 
 class WeekFinal : Scene {
-
-    override fun constantLight(): (Vec3) -> Colour {
-        return { it -> constantLighting(it) / 2.0f }
-    }
 
     override fun lookfrom() = Vec3(478, 278, -600)
     override fun lookat() = Vec3(278, 278, 0)
@@ -38,7 +33,7 @@ class WeekFinal : Scene {
             )
         )
 
-        val light = DiffuseLight(ConstantTexture(Colour(1.0, 1.0, 1.0)))
+        val light = DiffuseLight(ConstantTexture(Colour(7.0, 7.0, 7.0)))
 
         world.add(XZ_Rect(123f, 423f, 147f, 412f, 554f, light))
 

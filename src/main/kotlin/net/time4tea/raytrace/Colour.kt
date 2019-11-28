@@ -1,5 +1,7 @@
 package net.time4tea.raytrace
 
+import java.awt.Color
+import kotlin.math.min
 import kotlin.math.sqrt
 import kotlin.random.Random
 
@@ -86,6 +88,12 @@ class Colour(val r: Float, val g: Float, val b: Float) {
     override fun toString(): String {
         return "Colour(e0=$r, e1=$g, e2=$b)"
     }
+
+    fun asColor() = Color(
+        min(r, 1.0f),
+        min(g, 1.0f),
+        min(b, 1.0f)
+    )
 }
 
 operator fun Float.times(v: Colour) = v * this

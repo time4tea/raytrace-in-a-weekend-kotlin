@@ -1,6 +1,5 @@
 package net.time4tea.raytrace
 
-import java.awt.Color
 import java.awt.Dimension
 import java.awt.image.BufferedImage
 import javax.swing.ImageIcon
@@ -73,7 +72,7 @@ class BufferedImageDisplay(private val width: Int, private val height: Int) : Di
     }
 
     override fun plot(x: Int, y: Int, colour: Colour) {
-        bufferedImage.setRGB(x, height - (y + 1), Color(colour.r, colour.g, colour.b).rgb)
+        bufferedImage.setRGB(x, height - (y + 1), colour.asColor().rgb)
     }
 
     fun image(): BufferedImage {
