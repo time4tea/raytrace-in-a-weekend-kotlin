@@ -73,7 +73,7 @@ class BufferedImageDisplay(private val width: Int, private val height: Int) : Di
     }
 
     override fun plot(x: Int, y: Int, colour: Colour) {
-        bufferedImage.setRGB(x, height - (y + 1), Color(colour.r(), colour.g(), colour.b()).rgb)
+        bufferedImage.setRGB(x, height - (y + 1), Color(colour.r, colour.g, colour.b).rgb)
     }
 
     fun image(): BufferedImage {

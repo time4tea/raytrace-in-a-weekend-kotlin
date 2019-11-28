@@ -3,7 +3,7 @@ package net.time4tea.raytrace
 import kotlin.math.sqrt
 import kotlin.random.Random
 
-class Colour(private val r: Float, private val g: Float, private val b: Float) {
+class Colour(val r: Float, val g: Float, val b: Float) {
 
     constructor(r: Double, g: Double, b: Double) : this(r.toFloat(), g.toFloat(), b.toFloat())
 
@@ -13,10 +13,6 @@ class Colour(private val r: Float, private val g: Float, private val b: Float) {
 
         fun random(): Colour = Colour(Random.nextFloat(), Random.nextFloat(), Random.nextFloat())
     }
-
-    fun r(): Float = r
-    fun g(): Float = g
-    fun b(): Float = b
 
     operator fun unaryPlus() = this
     operator fun unaryMinus() = Colour(
