@@ -52,7 +52,7 @@ class WeekFinal : Scene {
         val boundary2 = Sphere(Vec3(0, 0, 0), 5000f, Dielectric(1.5))
         world.add(ConstantMedium(boundary2, 0.0001f, ConstantTexture(Colour(1.0, 1.0, 1.0))))
 
-        world.add(Sphere(Vec3(400, 200, 400), 100f, Lambertian(ImageTexture(File("src/main/resources/earth.jpg")))))
+        world.add(Sphere(Vec3(400, 200, 400), 100f, Lambertian(ImageTexture(File("src/main/resources/earthmap.jpg")))))
 
         world.add(Sphere(Vec3(220, 280, 300), 80f, Lambertian(NoiseTexture(0.1f))))
 

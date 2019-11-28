@@ -1,6 +1,6 @@
 package net.time4tea.raytrace
 
-import net.time4tea.raytrace.scenes.week.TwoPerlinSpheres
+import net.time4tea.raytrace.scenes.week.TwoEarthSpheres
 import java.io.File
 import java.time.Duration
 import java.time.Instant
@@ -8,7 +8,7 @@ import javax.imageio.ImageIO
 
 
 fun main() {
-    val scene = TwoPerlinSpheres()
+    val scene = TwoEarthSpheres()
     val world = scene.scene()
     val lookfrom = scene.lookfrom()
     val lookat = scene.lookat()

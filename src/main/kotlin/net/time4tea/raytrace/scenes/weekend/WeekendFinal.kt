@@ -25,7 +25,7 @@ class WeekendFinal : Scene {
             ConstantTexture(Colour(0.9, 0.9, 0.9))
         )
 
-        val earth = ImageTexture(File("src/main/resources/earth.jpg"))
+        val earth = ImageTexture(File("src/main/resources/earthmap.jpg"))
 
         return HitableList(
             listOf(
