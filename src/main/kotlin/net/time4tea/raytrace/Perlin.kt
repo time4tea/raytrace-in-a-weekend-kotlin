@@ -26,12 +26,12 @@ class Perlin {
     }
 
     private fun noise(p: Vec3): Float {
-        val u = p.x() - floor(p.x())
-        val v = p.y() - floor(p.y())
-        val w = p.z() - floor(p.z())
-        val i = floor(p.x()).toInt()
-        val j = floor(p.y()).toInt()
-        val k = floor(p.z()).toInt()
+        val u = p.x - floor(p.x)
+        val v = p.y - floor(p.y)
+        val w = p.z - floor(p.z)
+        val i = floor(p.x).toInt()
+        val j = floor(p.y).toInt()
+        val k = floor(p.z).toInt()
         val c = Array<Array<Array<Vec3>>>(
             2
         ) { di ->

@@ -23,11 +23,11 @@ fun main() {
         val s = hit_sphere(Vec3(0f, 0f, -1f), 0.5f, ray)
         if (s > 0.0f) {
             val N = (ray.point_at_parameter(s) - Vec3(0.0f, 0.0f, -1.0f)).unit()
-            return 0.5f * Colour(N.x() + 1, N.y() + 1, N.z() + 1)
+            return 0.5f * Colour(N.x + 1, N.y + 1, N.z + 1)
         }
 
         val unit_direction = ray.direction().unit()
-        val t = 0.5f * (unit_direction.y() + 1.0f)
+        val t = 0.5f * (unit_direction.y + 1.0f)
         println(t)
         return ((1.0f - t) * Colour.WHITE) + (t * Colour(
             0.5f,

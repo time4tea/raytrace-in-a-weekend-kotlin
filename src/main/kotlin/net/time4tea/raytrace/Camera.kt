@@ -27,7 +27,7 @@ class Camera(
 
     fun get_ray(s: Float, t: Float): Ray {
         val rd: Vec3 = lens_radius * random_in_unit_disc()
-        val offset = u * rd.x() + v * rd.y()
+        val offset = u * rd.x + v * rd.y
         return Ray(origin + offset, lower_left_corner + s * horizontal + t * vertical - origin - offset)
     }
 

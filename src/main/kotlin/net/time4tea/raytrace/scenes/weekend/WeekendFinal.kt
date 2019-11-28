@@ -5,7 +5,7 @@ import java.io.File
 
 fun constantLighting(direction: Vec3): Colour {
     val unit_direction = direction.unit()
-    val t = 0.5f * (unit_direction.y() + 1.0f)
+    val t = 0.5f * (unit_direction.y + 1.0f)
     return ((1.0f - t) * Colour.WHITE) + (t * Colour(
         0.5f,
         0.7f,

@@ -6,16 +6,16 @@ import kotlin.math.atan2
 import kotlin.math.sqrt
 import kotlin.random.Random
 
-class Vec3(private val e0: Float, private val e1: Float, private val e2: Float) {
+class Vec3(val x: Float, val y: Float, val z: Float) {
 
-    constructor(e0: Double, e1: Double, e2: Double) : this(e0.toFloat(), e1.toFloat(), e2.toFloat())
-    constructor(e0: Int, e1: Int, e2: Int) : this(e0.toFloat(), e1.toFloat(), e2.toFloat())
+    constructor(x: Double, y: Double, z: Double) : this(x.toFloat(), y.toFloat(), z.toFloat())
+    constructor(x: Int, y: Int, z: Int) : this(x.toFloat(), y.toFloat(), z.toFloat())
 
     companion object {
 
-        fun xx(): (Vec3) -> Float = { it.e0 }
-        fun yy(): (Vec3) -> Float = { it.e1 }
-        fun zz(): (Vec3) -> Float = { it.e2 }
+        fun xx(): (Vec3) -> Float = { it.x }
+        fun yy(): (Vec3) -> Float = { it.y }
+        fun zz(): (Vec3) -> Float = { it.z }
 
         val UNIT = Vec3(1.0f, 1.0f, 1.0f)
         val ZERO = Vec3(0f, 0f, 0f)
@@ -29,99 +29,91 @@ class Vec3(private val e0: Float, private val e1: Float, private val e2: Float) 
         }
     }
 
-    fun x(): Float = e0
-    fun y(): Float = e1
-    fun z(): Float = e2
-
-    fun r(): Float = e0
-    fun g(): Float = e1
-    fun b(): Float = e2
-
-    fun squared_length(): Float = e0 * e0 + e1 * e1 + e2 * e2
+    fun squared_length(): Float = x * x + y * y + z * z
     fun length(): Float = sqrt(squared_length())
 
     operator fun unaryPlus() = this
     operator fun unaryMinus() = Vec3(
-        -e0,
-        -e1,
-        -e2
+        -x,
+        -y,
+        -z
     )
 
     operator fun plus(other: Vec3): Vec3 {
         return Vec3(
-            e0 + other.e0,
-            e1 + other.e1,
-            e2 + other.e2
+            x + other.x,
+            y + other.y,
+            z + other.z
         )
     }
 
     operator fun minus(other: Vec3): Vec3 {
         return Vec3(
-            e0 - other.e0,
-            e1 - other.e1,
-            e2 - other.e2
+            x - other.x,
+            y - other.y,
+            z - other.z
         )
     }
 
     operator fun times(t: Float): Vec3 = Vec3(
-        e0 * t,
-        e1 * t,
-        e2 * t
+        x * t,
+        y * t,
+        z * t
     )
 
     operator fun times(other: Vec3): Vec3 {
         return Vec3(
-            e0 * other.e0,
-            e1 * other.e1,
-            e2 * other.e2
+            x * other.x,
+            y * other.y,
+            z * other.z
         )
     }
 
     operator fun div(other: Vec3): Vec3 {
         return Vec3(
-            e0 / other.e0,
-            e1 / other.e1,
-            e2 / other.e2
+            x / other.x,
+            y / other.y,
+            z / other.z
         )
     }
 
     operator fun div(s: Float): Vec3 {
         return Vec3(
-            e0 / s,
-            e1 / s,
-            e2 / s
+            x / s,
+            y / s,
+            z / s
         )
     }
 
     operator fun div(s: Int): Vec3 {
         return Vec3(
-            e0 / s,
-            e1 / s,
-            e2 / s
+            x / s,
+            y / s,
+            z / s
         )
     }
 
     fun withX(x: Float): Vec3 {
-        return Vec3(x, e1, e2)
+        return Vec3(x, y, z)
     }
 
     fun withY(y: Float): Vec3 {
-        return Vec3(e0, y, e2)
+        return Vec3(x, y, z)
     }
 
     fun withZ(z: Float): Vec3 {
-        return Vec3(e0, e1, z)
+        return Vec3(x, y, z)
     }
 
     fun dot(other: Vec3): Float {
-        return e0 * other.e0 + e1 * other.e1 + e2 * other.e2
+        return x * other.x + y * other.y + z * other.z
     }
 
     fun cross(v2: Vec3): Vec3 {
         return Vec3(
-            (e1 * v2.e2 - e2 * v2.e1),
-            (-(e0 * v2.e2 - e2 * v2.e0)),
-            (e0 * v2.e1 - e1 * v2.e0)
+            (y * v2.z - z * v2.y),
+            (-(x * v2.z - z * v2.x)),
+            (x * v2.y - y * v2.x)
         )
     }
 
@@ -142,26 +134,18 @@ class Vec3(private val e0: Float, private val e1: Float, private val e2: Float) 
         }
     }
 
-    fun sqrt(): Vec3 {
-        return Vec3(
-            sqrt(e0),
-            sqrt(e1),
-            sqrt(e2)
-        )
-    }
-
     data class UV(val u: Float, val v: Float)
 
     fun sphere_uv(): UV {
-        val phi = atan2(z(), x())
-        val theta = asin(y())
+        val phi = atan2(z, x)
+        val theta = asin(y)
         val u = 1 - (phi + PI) / (2 * PI)
         val v = (theta + PI / 2) / PI
         return UV(u.toFloat(), v.toFloat())
     }
 
     override fun toString(): String {
-        return "Vec3(e0=$e0, e1=$e1, e2=$e2)"
+        return "Vec3(x=$x, y=$y, z=$z)"
     }
 }
 

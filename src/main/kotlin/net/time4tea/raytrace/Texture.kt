@@ -18,7 +18,7 @@ class ConstantTexture(private val colour: Colour) : Texture {
 
 class CheckerTexture(private val t1: Texture, private val t2: Texture) : Texture {
     override fun value(u: Float, v: Float, p: Vec3): Colour {
-        val sines = sin(10 * p.x()) * sin(10 * p.y()) * sin(10 * p.z())
+        val sines = sin(10 * p.x) * sin(10 * p.y) * sin(10 * p.z)
         return if (sines < 0) {
             t1.value(u, v, p)
         } else {
@@ -32,7 +32,7 @@ class NoiseTexture(private val scale: Float) : Texture {
     private val noise = Perlin()
 
     override fun value(u: Float, v: Float, p: Vec3): Colour {
-        return Colour.WHITE * 0.5f * (1 + sin(scale * p.x() + 5 * noise.turb(scale * p)))
+        return Colour.WHITE * 0.5f * (1 + sin(scale * p.x + 5 * noise.turb(scale * p)))
     }
 }
 

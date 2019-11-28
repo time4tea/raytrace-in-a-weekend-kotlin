@@ -12,12 +12,12 @@ class XY_Rect(
         val origin = ray.origin()
         val direction = ray.direction()
 
-        val t = (k - origin.z()) / direction.z()
+        val t = (k - origin.z) / direction.z
         if (t < min || t > max)
             return null
 
-        val x = origin.x() + t * direction.x()
-        val y = origin.y() + t * direction.y()
+        val x = origin.x + t * direction.x
+        val y = origin.y + t * direction.y
 
         if (x < x0 || x > x1 || y < y0 || y > y1)
             return null
@@ -53,12 +53,12 @@ class XZ_Rect(
     private val material: Material
 ) : Hitable {
     override fun hit(ray: Ray, min: Float, max: Float): Hit? {
-        val t = (k - ray.origin().y()) / ray.direction().y()
+        val t = (k - ray.origin().y) / ray.direction().y
         if (t < min || t > max)
             return null
 
-        val x = ray.origin().x() + t * ray.direction().x()
-        val z = ray.origin().z() + t * ray.direction().z()
+        val x = ray.origin().x + t * ray.direction().x
+        val z = ray.origin().z + t * ray.direction().z
         if (x < x0 || x > x1 || z < z0 || z > z1)
             return null
 
@@ -93,11 +93,11 @@ class YZ_Rect(
     private val material: Material
 ) : Hitable {
     override fun hit(ray: Ray, min: Float, max: Float): Hit? {
-        val t = (k - ray.origin().x()) / ray.direction().x()
+        val t = (k - ray.origin().x) / ray.direction().x
         if (t < min || t > max)
             return null
-        val y = ray.origin().y() + t * ray.direction().y()
-        val z = ray.origin().z() + t * ray.direction().z()
+        val y = ray.origin().y + t * ray.direction().y
+        val z = ray.origin().z + t * ray.direction().z
         if (y < y0 || y > y1 || z < z0 || z > z1)
             return null
 

@@ -20,7 +20,7 @@ fun main() {
             return Colour(1.0f, 0.0f, 0.0f)
         }
         val unit_direction = ray.direction().unit()
-        val t = 0.5f * (unit_direction.y() + 1.0f)
+        val t = 0.5f * (unit_direction.y + 1.0f)
         return ((1.0f - t) * Colour.WHITE) + (t * Colour(
             0.5f,
             0.7f,
