@@ -63,9 +63,12 @@ class ScaledDisplay(private val scale: Int, private val delegate: Display) : Dis
     }
 }
 
-class BufferedImageDisplay(private val width: Int, private val height: Int) : Display {
+class BufferedImageDisplay(val image: BufferedImage) : Display {
 
-    private val bufferedImage = BufferedImage(width, height, BufferedImage.TYPE_INT_RGB)
+    private val width = image.width
+    private val height = image.height
+
+    constructor(width: Int, height: Int) : this(BufferedImage(width, height, BufferedImage.TYPE_INT_RGB))
 
     override fun size(): Dimension {
         return Dimension(width, height)
@@ -74,10 +77,6 @@ class BufferedImageDisplay(private val width: Int, private val height: Int) : Di
     override fun plot(x: Int, y: Int, colour: Colour) {
         assert(x <= width) { "$x > $width" }
         assert(y <= height) { "$y > $height" }
-        bufferedImage.setRGB(x, height - (y + 1), colour.asColor().rgb)
-    }
-
-    fun image(): BufferedImage {
-        return bufferedImage
+        image.setRGB(x, height - (y + 1), colour.asColor().rgb)
     }
 }

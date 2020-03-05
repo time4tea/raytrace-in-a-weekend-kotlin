@@ -37,7 +37,7 @@ fun main() {
     }
 
     val display = BufferedImageDisplay(600, 300)
-    SwingFrame(display.image())
+    SwingFrame(display.image)
 
     val nx = display.size().width
     val ny = display.size().height

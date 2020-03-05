@@ -6,7 +6,7 @@ import net.time4tea.raytrace.SwingFrame
 
 fun main() {
     val display = BufferedImageDisplay(200, 100)
-    SwingFrame(display.image())
+    SwingFrame(display.image)
 
     val nx = display.size().width
     val ny = display.size().height
