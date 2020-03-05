@@ -2,9 +2,11 @@ package net.time4tea.raytrace
 
 import java.awt.Dimension
 import java.awt.image.BufferedImage
+import javax.swing.BoxLayout
 import javax.swing.ImageIcon
 import javax.swing.JFrame
 import javax.swing.JLabel
+import javax.swing.JPanel
 import javax.swing.Timer
 
 interface Display {
@@ -12,15 +14,24 @@ interface Display {
     fun plot(x: Int, y: Int, colour: Colour)
 }
 
-class SwingFrame(image: BufferedImage) : JFrame() {
+class SwingFrame(vararg images: BufferedImage) : JFrame() {
 
-    private val icon = JLabel(ImageIcon(image))
-    private val timer = Timer(100) { icon.repaint() }
+    private val content = JPanel().also {
+        it.layout = BoxLayout(it, BoxLayout.LINE_AXIS)
+    }
+
+    private val icons = images.map {
+        JLabel(ImageIcon(it))
+    }
+
+    private val timer = Timer(100) { icons.map { it.repaint() } }
 
     init {
+        icons.map { content.add(it) }
+
         title = "Raytrace in a week/weekend"
         defaultCloseOperation = EXIT_ON_CLOSE
-        contentPane.add(icon)
+        contentPane.add(content)
 
         timer.start()
 

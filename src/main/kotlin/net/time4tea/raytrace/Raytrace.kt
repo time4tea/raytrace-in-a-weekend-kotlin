@@ -11,6 +11,7 @@ import java.time.Instant
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.ScheduledFuture
+import java.util.concurrent.Semaphore
 import java.util.concurrent.TimeUnit
 import javax.imageio.ImageIO
 
@@ -39,14 +40,18 @@ class OidnView(oidn: Oidn, private val executorService: ScheduledExecutorService
 
     fun stop(process: Boolean = false) {
         if (process) process()
-        filter.close()
-        device.close()
+        synchronized(device) {
+            filter.close()
+            device.close()
+        }
         scheduled?.cancel(true)
     }
 
     private fun process() {
         source.copyTo(colour)
-        filter.execute()
+        synchronized(device) {
+            filter.execute()
+        }
         output.copyTo(image)
     }
 }
@@ -77,8 +82,7 @@ fun main() {
 
         val renderer = Renderer(world, 100, 10, scene.constantLight())
 
-        SwingFrame(display.image)
-        SwingFrame(oidnView.image)
+        SwingFrame(display.image, oidnView.image)
 
         val scaled = ScaledDisplay(1, display)
 
