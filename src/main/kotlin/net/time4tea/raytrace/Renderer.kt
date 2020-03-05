@@ -3,6 +3,7 @@ package net.time4tea.raytrace
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.runBlocking
 import kotlin.random.Random
 
@@ -13,7 +14,7 @@ class Renderer(
     private val constantLight: (Vec3) -> Colour = { Colour.BLACK }
 ) {
 
-    private fun colour(ray: Ray, world: Hitable, depth: Int): Colour {
+    private fun colour(ray: Ray, world: Hitable, depth: Int = 0): Colour {
         return world.hit(ray, 0.001f, Float.MAX_VALUE)?.let { hit ->
             val emitted = hit.material.emitted(hit.u, hit.v, hit.p)
             if (depth < max_depth) {
@@ -31,36 +32,34 @@ class Renderer(
         val nx = display.size().width
         val ny = display.size().height
 
-        val jobs = mutableListOf<Deferred<Pair<Int, List<Colour>>>>()
+        val jobs = mutableListOf<Deferred<*>>()
 
-        for (j in 0 until ny) {
-            jobs.add(GlobalScope.async {
-                val row = mutableListOf<Colour>()
+        val step = 10
 
-                for (i in 0 until nx) {
+        for (j in 0 until ny step step) {
+            for (i in 0 until nx step step) {
+                jobs.add(GlobalScope.async {
+                    for (y in j until j + step) {
+                        for (x in i until i + step) {
+                            val colour = (0 until samples).fold(
+                                Colour.BLACK
+                            ) { running, _ ->
+                                val u = (x + Random.nextFloat()) / nx.toFloat()
+                                val v = (y + Random.nextFloat()) / ny.toFloat()
+                                running + colour(camera.get_ray(u, v), world)
+                            } / samples
 
-                    val colour = (0 until samples).fold(
-                        Colour.BLACK
-                    ) { running, _ ->
-                        val u = (i + Random.nextFloat()) / nx.toFloat()
-                        val v = (j + Random.nextFloat()) / ny.toFloat()
-                        running + colour(camera.get_ray(u, v), world, 0)
-                    } / samples
-
-                    row.add(colour.sqrt())
-                }
-
-                Pair(j, row)
-            })
+                            display.plot(x, y, colour.sqrt())
+                        }
+                    }
+                })
+            }
         }
 
+        println("Waiting for ${jobs.size} jobs to complete")
+
         runBlocking {
-            jobs.forEach {
-                val result = it.await()
-                for ((index, colour) in result.second.withIndex()) {
-                    display.plot(index, result.first, colour)
-                }
-            }
+            jobs.awaitAll()
         }
     }
 }

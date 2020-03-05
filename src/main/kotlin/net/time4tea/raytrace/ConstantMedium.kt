@@ -12,7 +12,7 @@ class ConstantMedium(
     private val phase_function = Isotropic(texture)
 
     override fun hit(ray: Ray, min: Float, max: Float): Hit? {
-        return boundary.hit(ray, Float.MIN_VALUE, Float.MAX_VALUE)?.let { hit1 ->
+        return boundary.hit(ray, -Float.MAX_VALUE, Float.MAX_VALUE)?.let { hit1 ->
             boundary.hit(ray, hit1.t + 0.0001f, Float.MAX_VALUE)?.let { hit2 ->
                 if (hit1.t >= hit2.t) {
                     null

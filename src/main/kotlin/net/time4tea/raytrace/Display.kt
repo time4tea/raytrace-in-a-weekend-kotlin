@@ -15,7 +15,7 @@ interface Display {
 class SwingFrame(image: BufferedImage) : JFrame() {
 
     private val icon = JLabel(ImageIcon(image))
-    private val timer = Timer(50) { icon.repaint() }
+    private val timer = Timer(100) { icon.repaint() }
 
     init {
         title = "Raytrace in a week/weekend"
@@ -72,6 +72,8 @@ class BufferedImageDisplay(private val width: Int, private val height: Int) : Di
     }
 
     override fun plot(x: Int, y: Int, colour: Colour) {
+        assert(x <= width) { "$x > $width" }
+        assert(y <= height) { "$y > $height" }
         bufferedImage.setRGB(x, height - (y + 1), colour.asColor().rgb)
     }
 
