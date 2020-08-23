@@ -14,6 +14,14 @@ class Colour(val r: Float, val g: Float, val b: Float) {
         val BLACK = Colour(0f, 0f, 0f)
 
         fun random(): Colour = Colour(Random.nextFloat(), Random.nextFloat(), Random.nextFloat())
+
+        fun from(hex: String): Colour {
+            return from(Color.decode(hex))
+        }
+
+        fun from(color: Color):Colour {
+            return Colour(color.red / 256.0, color.green / 256.0, color.blue / 256.0)
+        }
     }
 
     operator fun unaryPlus() = this

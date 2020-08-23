@@ -4,6 +4,7 @@ import net.time4tea.oidn.Oidn
 import net.time4tea.oidn.OidnImages
 import net.time4tea.oidn.copyTo
 import net.time4tea.raytrace.scenes.week.WeekFinal
+import net.time4tea.raytrace.scenes.weekend.WeekendFinal
 import java.awt.image.BufferedImage
 import java.io.File
 import java.time.Duration
@@ -11,12 +12,11 @@ import java.time.Instant
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.ScheduledFuture
-import java.util.concurrent.Semaphore
 import java.util.concurrent.TimeUnit
 import javax.imageio.ImageIO
 
 
-class OidnView(oidn: Oidn, private val executorService: ScheduledExecutorService, private val source: BufferedImage) {
+class OidnView(oidn: Oidn, private val source: BufferedImage) {
 
     val image = OidnImages.newBufferedImageFrom(source)
 
@@ -32,22 +32,15 @@ class OidnView(oidn: Oidn, private val executorService: ScheduledExecutorService
         filter.commit()
     }
 
-    private var scheduled: ScheduledFuture<*>? = null
-
-    fun start() {
-        scheduled = executorService.scheduleWithFixedDelay({ process() }, 0, 500, TimeUnit.MILLISECONDS)
-    }
-
     fun stop(process: Boolean = false) {
-        if (process) process()
+        if (process) copy()
         synchronized(device) {
             filter.close()
             device.close()
         }
-        scheduled?.cancel(true)
     }
 
-    private fun process() {
+    fun copy() {
         source.copyTo(colour)
         synchronized(device) {
             filter.execute()
@@ -60,7 +53,7 @@ fun main() {
 
     val oidn = Oidn()
 
-    val scene = WeekFinal()
+    val scene = WeekendFinal()
     val world = scene.scene()
     val lookfrom = scene.lookfrom()
     val lookat = scene.lookat()
@@ -71,9 +64,10 @@ fun main() {
 
     val image = OidnImages.newBufferedImage(800, 800)
     val display = BufferedImageDisplay(image)
-    val oidnView = OidnView(oidn, Executors.newSingleThreadScheduledExecutor(), display.image)
+    val executorService = Executors.newSingleThreadScheduledExecutor()
+    val oidnView = OidnView(oidn, display.image)
 
-    oidnView.start()
+    val scheduled = executorService.scheduleWithFixedDelay({ oidnView.copy() }, 0, 500, TimeUnit.MILLISECONDS)
 
     try {
         val aspect = display.size().width.toFloat() / display.size().height.toFloat()
@@ -93,6 +87,7 @@ fun main() {
         println("Duration was $duration")
 
     } finally {
+        scheduled.cancel(true)
         oidnView.stop(true)
     }
 
