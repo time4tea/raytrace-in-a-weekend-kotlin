@@ -117,6 +117,22 @@ class Vec3(val x: Float, val y: Float, val z: Float) {
         )
     }
 
+    fun min(v2: Vec3): Vec3 {
+        return Vec3(
+            kotlin.math.min(x,v2.x),
+            kotlin.math.min(y,v2.y),
+            kotlin.math.min(z,v2.z)
+        )
+    }
+
+    fun max(v2: Vec3): Vec3 {
+        return Vec3(
+            kotlin.math.max(x,v2.x),
+            kotlin.math.max(y,v2.y),
+            kotlin.math.max(z,v2.z)
+        )
+    }
+
     fun unit(): Vec3 = this / length()
 
     fun reflect(n: Vec3): Vec3 {

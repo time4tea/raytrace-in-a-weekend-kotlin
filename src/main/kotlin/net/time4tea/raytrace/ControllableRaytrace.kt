@@ -89,7 +89,7 @@ fun main() {
 
     val loader = Scripting()
 
-    val file = File("src/main/kotlin/net/time4tea/raytrace/scenes/dynamic/InProgress.kts")
+    val file = File("src/main/kotlin/net/time4tea/raytrace/scenes/dynamic/Triangles.kts")
     var bob: Scene = loader.load(file)
 
     val controllableScene = ControllableScene({ bob }, executor, scaled, { lookfrom, lookat, up, samples ->
