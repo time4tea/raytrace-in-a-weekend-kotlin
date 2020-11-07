@@ -24,8 +24,8 @@ class AABB(private val _min: Vec3, private val _max: Vec3) {
         var t_min = min
         var t_max = max
 
-        val direction = r.direction()
-        val origin = r.origin()
+        val direction = r.direction
+        val origin = r.origin
 
         // x
         val tminx = min(

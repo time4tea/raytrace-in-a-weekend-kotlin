@@ -17,10 +17,10 @@ class ConstantMedium(
                 if (hit1.t >= hit2.t) {
                     null
                 } else {
-                    val distance_inside_boundary = (hit2.t - hit1.t) * ray.direction().length()
+                    val distance_inside_boundary = (hit2.t - hit1.t) * ray.direction.length()
                     val hit_distance = -(1.0f / density) * ln(Random.nextFloat())
                     if (hit_distance < distance_inside_boundary) {
-                        val t = hit1.t + hit_distance / ray.direction().length()
+                        val t = hit1.t + hit_distance / ray.direction.length()
                         Hit(
                             t,
                             0.0f, 0.0f,

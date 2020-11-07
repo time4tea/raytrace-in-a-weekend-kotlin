@@ -41,12 +41,12 @@ class RotateY(private val p: Hitable, angle: Float) : Hitable {
     }
 
     override fun hit(ray: Ray, min: Float, max: Float): Hit? {
-        var origin = ray.origin()
-        var direction = ray.direction()
-        origin = origin.withX(cos_theta * ray.origin().x - sin_theta * ray.origin().z)
-        origin = origin.withZ(sin_theta * ray.origin().x + cos_theta * ray.origin().z)
-        direction = direction.withX(cos_theta * ray.direction().x - sin_theta * ray.direction().z)
-        direction = direction.withZ(sin_theta * ray.direction().x + cos_theta * ray.direction().z)
+        var origin = ray.origin
+        var direction = ray.direction
+        origin = origin.withX(cos_theta * ray.origin.x - sin_theta * ray.origin.z)
+        origin = origin.withZ(sin_theta * ray.origin.x + cos_theta * ray.origin.z)
+        direction = direction.withX(cos_theta * ray.direction.x - sin_theta * ray.direction.z)
+        direction = direction.withZ(sin_theta * ray.direction.x + cos_theta * ray.direction.z)
         val rotated_r = Ray(origin, direction)
         return p.hit(rotated_r, min, max)?.let {
             var p = it.p

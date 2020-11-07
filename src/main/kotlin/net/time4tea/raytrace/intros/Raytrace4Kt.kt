@@ -7,9 +7,9 @@ import kotlin.math.sqrt
 fun main() {
 
     fun hit_sphere(centre: Vec3, radius: Float, r: Ray): Float {
-        val oc = r.origin() - centre
-        val a = r.direction().dot(r.direction())
-        val b = 2.0f * oc.dot(r.direction())
+        val oc = r.origin - centre
+        val a = r.direction.dot(r.direction)
+        val b = 2.0f * oc.dot(r.direction)
         val c = oc.dot(oc) - radius * radius
         val discriminant = b * b - 4 * a * c
         return if (discriminant < 0) {
@@ -26,7 +26,7 @@ fun main() {
             return 0.5f * Colour(N.x + 1, N.y + 1, N.z + 1)
         }
 
-        val unit_direction = ray.direction().unit()
+        val unit_direction = ray.direction.unit()
         val t = 0.5f * (unit_direction.y + 1.0f)
         println(t)
         return ((1.0f - t) * Colour.WHITE) + (t * Colour(

@@ -27,9 +27,9 @@ class Isotropic(private val texture: Texture) : Material {
 
 class Metal(private val albedo: Colour, private val fuzz: Float) : Material {
     override fun scatter(input: Ray, hit: Hit): Scattered? {
-        val reflected = input.direction().unit().reflect(hit.normal)
+        val reflected = input.direction.unit().reflect(hit.normal)
         val scattered = Ray(hit.p, reflected + Vec3.random_unit_sphere() * fuzz)
-        return if (scattered.direction().dot(hit.normal) > 0.0) {
+        return if (scattered.direction.dot(hit.normal) > 0.0) {
             Scattered(albedo, scattered)
         } else {
             null
@@ -57,7 +57,7 @@ class Dielectric(private val ri: Float) : Material {
     }
 
     override fun scatter(input: Ray, hit: Hit): Scattered? {
-        val reflected = input.direction().reflect(hit.normal)
+        val reflected = input.direction.reflect(hit.normal)
 
         val attenuation = Colour.WHITE
 
@@ -65,18 +65,18 @@ class Dielectric(private val ri: Float) : Material {
         val outward_normal: Vec3
         val ni_over_nt: Float
 
-        if (input.direction().dot(hit.normal) > 0.0f) {
+        if (input.direction.dot(hit.normal) > 0.0f) {
             outward_normal = -hit.normal
             ni_over_nt = ri
-            val cosinex = input.direction().dot(hit.normal) / input.direction().length()
+            val cosinex = input.direction.dot(hit.normal) / input.direction.length()
             cosine = sqrt(1 - ri * ri * (1 - cosinex * cosinex))
         } else {
             outward_normal = hit.normal
             ni_over_nt = 1.0f / ri
-            cosine = -(input.direction().dot(hit.normal)) / input.direction().length()
+            cosine = -(input.direction.dot(hit.normal)) / input.direction.length()
         }
 
-        val refracted = input.direction().refract(outward_normal, ni_over_nt)
+        val refracted = input.direction.refract(outward_normal, ni_over_nt)
 
         val reflect_prob = if (refracted != null) {
             schlick(cosine, ri)

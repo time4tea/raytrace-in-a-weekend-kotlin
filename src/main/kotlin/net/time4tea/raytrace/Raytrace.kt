@@ -67,14 +67,14 @@ fun main() {
     val executorService = Executors.newSingleThreadScheduledExecutor()
     val oidnView = OidnView(oidn, display.image)
 
-    val scheduled = executorService.scheduleWithFixedDelay({ oidnView.copy() }, 0, 500, TimeUnit.MILLISECONDS)
+    val scheduled = executorService.scheduleWithFixedDelay({ oidnView.copy() }, 0, 2000, TimeUnit.MILLISECONDS)
 
     try {
         val aspect = display.size().width.toFloat() / display.size().height.toFloat()
 
         val camera = Camera(lookfrom, lookat, Vec3(0f, 1f, 0f), fov, aspect, aperture, dist_to_focus)
 
-        val renderer = Renderer(world, 100, 10, scene.constantLight())
+        val renderer = Renderer(world, 1, 10, scene.constantLight())
 
         SwingFrame(display.image, oidnView.image)
 

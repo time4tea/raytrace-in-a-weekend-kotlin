@@ -15,16 +15,16 @@ class Triangle(val v0: Vec3, val v1: Vec3, val v2: Vec3, val material: Material)
         val v0v1 = v1 - v0
         val v0v2 = v2 - v0
 
-        val pvec = ray.direction().cross(v0v2)
+        val pvec = ray.direction.cross(v0v2)
         val det = v0v1.dot(pvec)
         if (det < kEpsilon) return null
         val inv = 1 / det
-        val tvec = ray.origin() - v0
+        val tvec = ray.origin - v0
         val u = tvec.dot(pvec) * inv
 
         if (u < 0 || u > 1) return null
         val qvec = tvec.cross(v0v1)
-        val v = ray.direction().dot(qvec) * inv
+        val v = ray.direction.dot(qvec) * inv
         if (v < 0 || u + v > 1) return null
 
         val t = v0v2.dot(qvec) * inv

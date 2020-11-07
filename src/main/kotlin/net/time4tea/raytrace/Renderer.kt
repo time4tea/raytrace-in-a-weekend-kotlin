@@ -26,7 +26,7 @@ class Renderer(
             } else {
                 emitted
             }
-        } ?: constantLight(ray.direction())
+        } ?: constantLight(ray.direction)
     }
 
     fun render(camera: Camera, display: Display) {
