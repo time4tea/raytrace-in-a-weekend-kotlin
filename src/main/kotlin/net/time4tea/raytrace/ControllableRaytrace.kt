@@ -94,7 +94,7 @@ fun main() {
 
     val controllableScene = ControllableScene({ bob }, executor, scaled, { lookfrom, lookat, up, samples ->
         println("Camera: LookFrom: $lookfrom  -> To: $lookat, Orientation: $up, Samples: $samples")
-    }, { oidnView.copy() })
+    }, { /*oidnView.copy()*/ })
 
     var lastUpdate = 0L
 
@@ -122,7 +122,7 @@ fun main() {
         }
 
         override fun keyPressed(event: KeyEvent) {
-            val step = 50.0
+            val step = 40.0
             when (event.keyCode) {
                 // needs to rotate around the look at really...
                 KeyEvent.VK_RIGHT -> controllableScene.moveCamera { it.plus(Vec3(step, 0.0, 0.0)) }
