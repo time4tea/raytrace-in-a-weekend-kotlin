@@ -21,38 +21,56 @@ class AABB(private val _min: Vec3, private val _max: Vec3) {
 
     fun hit(r: Ray, min: Float, max: Float): Boolean {
 
-        var tmin = min
-        var tmax = max
+        var t_min = min
+        var t_max = max
 
-        val origin = r.origin()
         val direction = r.direction()
+        val origin = r.origin()
 
-        // X
-        val x_min = (_min.x - origin.x) / direction.x
-        val x_max   = (_max.x - origin.x) / direction.x
+        // x
+        val tminx = min(
+            (_min.x - origin.x) / direction.x,
+            (_max.x - origin.x) / direction.x
+        )
+        val tmaxx = max(
+            (_min.x - origin.x) / direction.x,
+            (_max.x - origin.x) / direction.x
+        )
         
-        tmin = max(min(x_min, x_max), tmin)
-        tmax = min(max(x_min, x_max), tmax)
-        
-        if ( tmax <= tmin) return false
+        t_min = max(tminx, t_min)
+        t_max = min(tmaxx, t_max)
 
-        // Y
-        val y_min = (_min.y - origin.y) / direction.y
-        val y_max   = (_max.y - origin.y) / direction.y
-        
-        tmin = max(min(y_min, y_max), tmin)
-        tmax = min(max(y_min, y_max), tmax)
-        
-        if ( tmax <= tmin) return false
+        if ( t_max < t_min) return false
 
-        // Z
-        val z_min = (_min.z - origin.z) / direction.z
-        val z_max   = (_max.z - origin.z) / direction.z
-        
-        tmin = max(min(z_min, z_max), tmin)
-        tmax = min(max(z_min, z_max), tmax)
-        
-        if ( tmax <= tmin) return false
+        // y
+        val tminy = min(
+            (_min.y - origin.y) / direction.y,
+            (_max.y - origin.y) / direction.y
+        )
+        val tmaxy = max(
+            (_min.y - origin.y) / direction.y,
+            (_max.y - origin.y) / direction.y
+        )
+
+        t_min = max(tminy, t_min)
+        t_max = min(tmaxy, t_max)
+
+        if ( t_max < t_min) return false
+
+        // z
+        val tminz = min(
+            (_min.z - origin.z) / direction.z,
+            (_max.z - origin.z) / direction.z
+        )
+        val tmaxz = max(
+            (_min.z - origin.z) / direction.z,
+            (_max.z - origin.z) / direction.z
+        )
+
+        t_min = max(tminz, t_min)
+        t_max = min(tmaxz, t_max)
+
+        if ( t_max < t_min) return false
 
         return true
     }
