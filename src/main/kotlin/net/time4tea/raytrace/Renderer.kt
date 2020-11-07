@@ -5,6 +5,8 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.runBlocking
+import java.time.Duration
+import java.time.Instant
 import kotlin.random.Random
 
 class Renderer(
@@ -34,7 +36,7 @@ class Renderer(
 
         val jobs = mutableListOf<Deferred<*>>()
 
-        val step = 10
+        val step = 50
 
         for (j in 0 until ny step step) {
             for (i in 0 until nx step step) {
@@ -57,9 +59,11 @@ class Renderer(
         }
 
         println("Waiting for ${jobs.size} jobs to complete")
-
+        val start = Instant.now()
         runBlocking {
             jobs.awaitAll()
         }
+        val duration = Duration.between(start, Instant.now())
+        println("Render took $duration")
     }
 }
