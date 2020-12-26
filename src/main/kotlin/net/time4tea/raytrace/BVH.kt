@@ -54,16 +54,16 @@ class BVH(hitables: List<Hitable>) : Hitable {
 
     override fun hit(ray: Ray, min: Float, max: Float): Hit? {
         return if (box.hit(ray, min, max)) {
-            val hit_left = left.hit(ray, min, max)
-            val hit_right = right.hit(ray, min, max)
+            val hitLeft = left.hit(ray, min, max)
+            val hitRight = right.hit(ray, min, max)
 
             return when {
-                hit_left != null && hit_right != null -> when {
-                    hit_left.t < hit_right.t -> hit_left
-                    else -> hit_right
+                hitLeft != null && hitRight != null -> when {
+                    hitLeft.t < hitRight.t -> hitLeft
+                    else -> hitRight
                 }
-                hit_left != null -> hit_left
-                hit_right != null -> hit_right
+                hitLeft != null -> hitLeft
+                hitRight != null -> hitRight
                 else -> null
             }
         }

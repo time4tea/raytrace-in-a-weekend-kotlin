@@ -16,7 +16,7 @@ ext {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.0.1"
-    implementation "net.time4tea:oidnjni:0.1.03"
+    implementation "net.time4tea:oidnjni:0.1.6"
     implementation "org.jetbrains.kotlin:kotlin-script-runtime:$kotlinVersion"
     implementation "org.jetbrains.kotlin:kotlin-compiler-embeddable:$kotlinVersion"
     implementation "org.jetbrains.kotlin:kotlin-script-util:$kotlinVersion"

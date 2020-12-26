@@ -12,6 +12,7 @@ class ObjLoader {
         open fun vertex(x: Float, y: Float, z: Float) {}
         open fun vertexNormal(x: Float, y: Float, z: Float) {}
         open fun face(v1: Geom, v2: Geom, v3: Geom) {}
+        open fun end() {}
     }
 
     private fun floats(string: String): List<Float> = string.split(Regex(" +")).map { it.toFloat() }
@@ -45,5 +46,6 @@ class ObjLoader {
                     else -> println("${it.first()} not handled")
                 }
             }
+        loading.end()
     }
 }

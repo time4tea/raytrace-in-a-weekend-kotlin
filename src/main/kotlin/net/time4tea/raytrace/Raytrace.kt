@@ -59,7 +59,7 @@ fun main() {
     val lookat = scene.lookat()
 
     val dist_to_focus = 10.0f
-    val aperture = 0.00f
+    val aperture = 0.1f
     val fov = 40f
 
     val image = OidnImages.newBufferedImage(800, 800)
@@ -74,7 +74,7 @@ fun main() {
 
         val camera = Camera(lookfrom, lookat, Vec3(0f, 1f, 0f), fov, aspect, aperture, dist_to_focus)
 
-        val renderer = Renderer(world, 1, 10, scene.constantLight())
+        val renderer = Renderer(world, 100, 10, scene.constantLight())
 
         SwingFrame(display.image, oidnView.image)
 

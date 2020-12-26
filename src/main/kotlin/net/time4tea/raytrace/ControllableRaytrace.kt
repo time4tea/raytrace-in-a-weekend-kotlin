@@ -2,18 +2,17 @@ package net.time4tea.raytrace
 
 import net.time4tea.oidn.Oidn
 import net.time4tea.oidn.OidnImages
-import net.time4tea.raytrace.script.Scripting
-import java.awt.event.KeyEvent
-import java.awt.event.KeyListener
-import java.io.File
-import java.util.concurrent.Executor
+import net.time4tea.raytrace.scenes.weekend.WeekendFinal
+import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
+import java.util.concurrent.Future
+import java.util.concurrent.FutureTask
+import java.util.concurrent.atomic.AtomicReference
 
 
 class ControllableScene(
     val scenefn: () -> Scene,
-    val executor: Executor,
+    val executor: ExecutorService,
     val display: Display,
     val start: (Vec3, Vec3, Vec3, Int) -> Unit,
     val complete: () -> Unit
@@ -32,8 +31,12 @@ class ControllableScene(
 
     var samples = 2
 
+    val submitted: AtomicReference<Future<*>> = AtomicReference(FutureTask { true })
+
     fun render() {
-        executor.execute {
+        println("Rendering")
+        submitted.get().cancel(false)
+        submitted.set(executor.submit {
             try {
                 val renderer = Renderer(scene.scene(), samples, 2, scene.constantLight())
 
@@ -46,10 +49,10 @@ class ControllableScene(
                 complete()
             } catch (e: Exception) {
                 e.printStackTrace()
-            } catch ( e: NotImplementedError ) {
+            } catch (e: NotImplementedError) {
                 e.printStackTrace()
             }
-        }
+        })
     }
 
     fun reload() {
@@ -61,8 +64,8 @@ class ControllableScene(
         render()
     }
 
-    fun moveCamera(x: (Vec3) -> Vec3) {
-        lookfrom = x(lookfrom)
+    fun moveCamera(x: (Vec3, Vec3) -> Vec3) {
+        lookfrom = x(lookfrom, lookat)
         updated()
     }
 
@@ -72,12 +75,11 @@ class ControllableScene(
     }
 }
 
-
 fun main() {
 
     val oidn = Oidn()
 
-    val image = OidnImages.newBufferedImage(800, 800)
+    val image = OidnImages.newBufferedImage(1600, 1200)
     val display = BufferedImageDisplay(image)
     val oidnView = OidnView(oidn, display.image)
 
@@ -87,59 +89,13 @@ fun main() {
 
     val scaled = ScaledDisplay(1, display)
 
-    val loader = Scripting()
-
-    val file = File("src/main/kotlin/net/time4tea/raytrace/scenes/dynamic/Triangles.kts")
-    var bob: Scene = loader.load(file)
+    val bob: Scene = WeekendFinal()
 
     val controllableScene = ControllableScene({ bob }, executor, scaled, { lookfrom, lookat, up, samples ->
         println("Camera: LookFrom: $lookfrom  -> To: $lookat, Orientation: $up, Samples: $samples")
-    }, { /*oidnView.copy()*/ })
+    }, { oidnView.copy() })
 
-    var lastUpdate = 0L
-
-    executor.scheduleWithFixedDelay(
-        {
-            val newUpdate = file.lastModified()
-            if ( newUpdate != lastUpdate ) {
-                lastUpdate = newUpdate
-                try {
-                    bob = loader.load(file)
-                    controllableScene.reload()
-                } catch (ignored: Exception) {
-                    ignored.printStackTrace()
-                }
-            }
-        },
-        0L,
-        1,
-        TimeUnit.SECONDS
-    )
-
-
-    frame.addKeyListener(object : KeyListener {
-        override fun keyTyped(p0: KeyEvent) {
-        }
-
-        override fun keyPressed(event: KeyEvent) {
-            val step = 40.0
-            when (event.keyCode) {
-                // needs to rotate around the look at really...
-                KeyEvent.VK_RIGHT -> controllableScene.moveCamera { it.plus(Vec3(step, 0.0, 0.0)) }
-                KeyEvent.VK_LEFT -> controllableScene.moveCamera { it.plus(Vec3(-step, 0.0, 0.0)) }
-                KeyEvent.VK_UP -> controllableScene.moveCamera { it.plus(Vec3(0.0, -step, 0.0)) }
-                KeyEvent.VK_DOWN -> controllableScene.moveCamera { it.plus(Vec3(0.0, step, 0.0)) }
-                KeyEvent.VK_EQUALS -> controllableScene.moveCamera { it.plus(Vec3(0.0, 0.0, step)) }
-                KeyEvent.VK_MINUS -> controllableScene.moveCamera { it.plus(Vec3(0.0, 0.0, -step)) }
-                KeyEvent.VK_1 -> controllableScene.samples { it - 1 }
-                KeyEvent.VK_2 -> controllableScene.samples { it + 1 }
-            }
-        }
-
-        override fun keyReleased(p0: KeyEvent) {
-
-        }
-    })
+    frame.addKeyListener(KeyMovement(controllableScene))
 
 
     controllableScene.render()

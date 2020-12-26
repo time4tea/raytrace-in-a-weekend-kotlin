@@ -2,7 +2,7 @@ package net.time4tea.raytrace
 
 class Box(p0: Vec3, p1: Vec3, ptr: Material) : Hitable {
 
-    private val components = HitableList(
+    private val components = BVH(
         listOf(
             XY_Rect(p0.x, p1.x, p0.y, p1.y, p1.z, ptr),
             FlipNormals(XY_Rect(p0.x, p1.x, p0.y, p1.y, p0.z, ptr)),
