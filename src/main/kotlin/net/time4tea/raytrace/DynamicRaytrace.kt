@@ -25,9 +25,9 @@ fun main() {
     val loader = Scripting()
 
     val file = File("src/main/kotlin/net/time4tea/raytrace/scenes/dynamic/WeekendFinal.kts")
-    var bob: Scene = loader.load(file)
+    var scene: Scene = loader.load(file)
 
-    val controllableScene = ControllableScene({ bob }, executor, scaled, { lookfrom, lookat, up, samples, depth ->
+    val controllableScene = ControllableScene({ scene }, executor, scaled, { lookfrom, lookat, up, samples, depth ->
         println("Camera: LookFrom: $lookfrom  -> \n\tTo: $lookat, \n\tOrientation: $up, \n\tSamples: $samples, \n\tDepth: $depth")
     }, { oidnView.copy() })
 
@@ -39,7 +39,7 @@ fun main() {
             if (newUpdate != lastUpdate) {
                 lastUpdate = newUpdate
                 try {
-                    bob = loader.load(file)
+                    scene = loader.load(file)
                     controllableScene.reload()
                 } catch (ignored: Exception) {
                     ignored.printStackTrace()
@@ -51,6 +51,14 @@ fun main() {
         TimeUnit.SECONDS
     )
     frame.addKeyListener(KeyMovement(controllableScene))
+    frame.addKeyListener(
+        KeySaving(
+            scene, mapOf(
+                "rendered" to display.image,
+                "denoised" to oidnView.image
+            )
+        )
+    )
 
     controllableScene.render()
 }

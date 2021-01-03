@@ -3,7 +3,9 @@ package net.time4tea.raytrace
 import net.time4tea.oidn.Oidn
 import net.time4tea.oidn.OidnImages
 import net.time4tea.oidn.copyTo
+import net.time4tea.raytrace.scenes.week.CornellBox
 import net.time4tea.raytrace.scenes.week.WeekFinal
+import net.time4tea.raytrace.scenes.weekend.WeekendFinal
 import java.awt.event.KeyEvent
 import java.awt.event.KeyListener
 import java.awt.image.BufferedImage
@@ -101,7 +103,7 @@ fun main() {
 
     val scaled = ScaledDisplay(1, display)
 
-    val scene = WeekFinal()
+    val scene = CornellBox()
 
     val controllableScene = ControllableScene({ scene }, executor, scaled, { lookfrom, lookat, up, samples, depth ->
         println("Camera: LookFrom: $lookfrom  -> To: $lookat, \n\tOrientation: $up, \n\tSamples: $samples, \n\tMax Depth: $depth")
@@ -138,6 +140,8 @@ class KeySaving(scene: Scene, private val images: Map<String, BufferedImage>) : 
     private val sceneName = scene.javaClass.simpleName.toLowerCase()
     private val saving = ImageSaving()
 
+    private var counter = 0
+
     override fun keyTyped(e: KeyEvent) {
 
     }
@@ -146,8 +150,9 @@ class KeySaving(scene: Scene, private val images: Map<String, BufferedImage>) : 
         when (e.keyCode) {
             KeyEvent.VK_S -> {
                 images.forEach { (n, i) ->
-                    val file = File("example-output/$sceneName-$n.png")
+                    val file = File("example-output/$sceneName-$n-$counter.png")
                     println("Saving $n -> $file")
+                    counter++
                     saving.save(i, file)
                 }
             }
