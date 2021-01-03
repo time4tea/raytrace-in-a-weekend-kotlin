@@ -38,7 +38,7 @@ class WeekFinal : Scene {
         world.add(XZ_Rect(123f, 423f, 147f, 412f, 554f, light))
 
         world.add(Sphere(Vec3(260, 150, 45), 50f, Dielectric(1.5)))
-        world.add(Sphere(Vec3(0, 150, 145), 50f, Metal(Colour(0.8, 0.8, 0.9), 10f)))
+        world.add(Sphere(Vec3(0, 150, 145), 50f, Metal(Colour(0.8, 0.8, 0.9), 1.0f)))
 
         val boundary1 = Sphere(Vec3(360, 150, 145), 70f, Dielectric(1.5))
         world.add(boundary1)
