@@ -32,7 +32,7 @@ and renders in 0.3 seconds.
 
 ### Main Programs
 
-- Raytrace.kt - rander a scene
+- Raytrace.kt - render a scene
 - ControllableRaytrace.kt - render a scene and move around it
 - DynamicRaytrace.kt - render a scene, which can be modified while program is running
 
