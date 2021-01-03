@@ -27,8 +27,8 @@ fun main() {
     val file = File("src/main/kotlin/net/time4tea/raytrace/scenes/dynamic/WeekendFinal.kts")
     var bob: Scene = loader.load(file)
 
-    val controllableScene = ControllableScene({ bob }, executor, scaled, { lookfrom, lookat, up, samples ->
-        println("Camera: LookFrom: $lookfrom  -> To: $lookat, Orientation: $up, Samples: $samples")
+    val controllableScene = ControllableScene({ bob }, executor, scaled, { lookfrom, lookat, up, samples, depth ->
+        println("Camera: LookFrom: $lookfrom  -> \n\tTo: $lookat, \n\tOrientation: $up, \n\tSamples: $samples, \n\tDepth: $depth")
     }, { oidnView.copy() })
 
     var lastUpdate = 0L

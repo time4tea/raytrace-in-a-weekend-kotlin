@@ -45,6 +45,8 @@ class KeyMovement(val scene: ControllableScene) : KeyListener {
             }
             KeyEvent.VK_1 -> scene.samples { it - 1 }
             KeyEvent.VK_2 -> scene.samples { it + 1 }
+            KeyEvent.VK_9 -> scene.depth { it - 1 }
+            KeyEvent.VK_0 -> scene.depth { it + 1 }
         }
     }
 

@@ -2,20 +2,25 @@ package net.time4tea.raytrace
 
 import net.time4tea.oidn.Oidn
 import net.time4tea.oidn.OidnImages
-import net.time4tea.raytrace.scenes.found.CornellGlassBoxes
-import net.time4tea.raytrace.scenes.week.CornellBoxWithBox
+import net.time4tea.oidn.copyTo
+import net.time4tea.raytrace.scenes.week.WeekFinal
+import java.awt.event.KeyEvent
+import java.awt.event.KeyListener
+import java.awt.image.BufferedImage
+import java.io.File
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.Future
 import java.util.concurrent.FutureTask
 import java.util.concurrent.atomic.AtomicReference
+import javax.imageio.ImageIO
 
 
 class ControllableScene(
     val scenefn: () -> Scene,
     val executor: ExecutorService,
     val display: Display,
-    val start: (Vec3, Vec3, Vec3, Int) -> Unit,
+    val start: (Vec3, Vec3, Vec3, Int, Int) -> Unit,
     val complete: () -> Unit
 ) {
 
@@ -30,20 +35,20 @@ class ControllableScene(
 
     val up = Vec3(0f, 1f, 0f)
 
-    var samples = 10
-    val max_depth = 100
+    var samples = 20
+    var max_depth = 10
 
     val submitted: AtomicReference<Future<*>> = AtomicReference(FutureTask { true })
 
     fun render() {
-        println("Rendering")
         submitted.get().cancel(false)
         submitted.set(executor.submit {
+            println("Rendering...")
             try {
                 val renderer = Renderer(scene.scene(), samples, max_depth, scene.constantLight())
 
                 val aspect = display.size().width.toFloat() / display.size().height.toFloat()
-                start(lookfrom, lookat, up, samples)
+                start(lookfrom, lookat, up, samples, max_depth)
                 renderer.render(
                     Camera(lookfrom, lookat, up, fov, aspect, aperture, dist_to_focus),
                     display
@@ -75,6 +80,11 @@ class ControllableScene(
         samples = x(samples)
         updated()
     }
+
+    fun depth(x: (Int) -> Int) {
+        max_depth = x(max_depth)
+        updated()
+    }
 }
 
 fun main() {
@@ -91,14 +101,61 @@ fun main() {
 
     val scaled = ScaledDisplay(1, display)
 
-    val bob: Scene = CornellBoxWithBox()
+    val scene = WeekFinal()
 
-    val controllableScene = ControllableScene({ bob }, executor, scaled, { lookfrom, lookat, up, samples ->
-        println("Camera: LookFrom: $lookfrom  -> To: $lookat, Orientation: $up, Samples: $samples")
-    }, { oidnView.copy() })
+    val controllableScene = ControllableScene({ scene }, executor, scaled, { lookfrom, lookat, up, samples, depth ->
+        println("Camera: LookFrom: $lookfrom  -> To: $lookat, \n\tOrientation: $up, \n\tSamples: $samples, \n\tMax Depth: $depth")
+    }, {
+        oidnView.copy()
+    })
 
     frame.addKeyListener(KeyMovement(controllableScene))
-
+    frame.addKeyListener(
+        KeySaving(
+            scene, mapOf(
+                "rendered" to display.image,
+                "denoised" to oidnView.image
+            )
+        )
+    )
 
     controllableScene.render()
 }
+
+class ImageSaving {
+    fun save(image: BufferedImage, file: File) {
+        val dest = BufferedImage(image.width, image.height, BufferedImage.TYPE_INT_RGB)
+        try {
+            image.copyTo(dest)
+            ImageIO.write(dest, "PNG", file)
+        } finally {
+            dest.flush()
+        }
+    }
+}
+
+class KeySaving(scene: Scene, private val images: Map<String, BufferedImage>) : KeyListener {
+    private val sceneName = scene.javaClass.simpleName.toLowerCase()
+    private val saving = ImageSaving()
+
+    override fun keyTyped(e: KeyEvent) {
+
+    }
+
+    override fun keyPressed(e: KeyEvent) {
+        when (e.keyCode) {
+            KeyEvent.VK_S -> {
+                images.forEach { (n, i) ->
+                    val file = File("example-output/$sceneName-$n.png")
+                    println("Saving $n -> $file")
+                    saving.save(i, file)
+                }
+            }
+        }
+    }
+
+    override fun keyReleased(e: KeyEvent) {
+
+    }
+}
+
