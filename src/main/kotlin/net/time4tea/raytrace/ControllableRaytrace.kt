@@ -2,9 +2,6 @@ package net.time4tea.raytrace
 
 import net.time4tea.oidn.Oidn
 import net.time4tea.oidn.OidnImages
-import net.time4tea.oidn.copyTo
-import net.time4tea.raytrace.scenes.week.CornellBox
-import net.time4tea.raytrace.scenes.week.WeekFinal
 import net.time4tea.raytrace.scenes.weekend.WeekendFinal
 import java.awt.event.KeyEvent
 import java.awt.event.KeyListener
@@ -15,7 +12,6 @@ import java.util.concurrent.Executors
 import java.util.concurrent.Future
 import java.util.concurrent.FutureTask
 import java.util.concurrent.atomic.AtomicReference
-import javax.imageio.ImageIO
 
 
 class ControllableScene(
@@ -93,7 +89,7 @@ fun main() {
 
     val oidn = Oidn()
 
-    val image = OidnImages.newBufferedImage(600, 600)
+    val image = OidnImages.newBufferedImage(1200, 700)
     val display = BufferedImageDisplay(image)
     val oidnView = OidnView(oidn, display.image)
 
@@ -103,7 +99,7 @@ fun main() {
 
     val scaled = ScaledDisplay(1, display)
 
-    val scene = CornellBox()
+    val scene = WeekendFinal()
 
     val controllableScene = ControllableScene({ scene }, executor, scaled, { lookfrom, lookat, up, samples, depth ->
         println("Camera: LookFrom: $lookfrom  -> To: $lookat, \n\tOrientation: $up, \n\tSamples: $samples, \n\tMax Depth: $depth")
@@ -122,18 +118,6 @@ fun main() {
     )
 
     controllableScene.render()
-}
-
-class ImageSaving {
-    fun save(image: BufferedImage, file: File) {
-        val dest = BufferedImage(image.width, image.height, BufferedImage.TYPE_INT_RGB)
-        try {
-            image.copyTo(dest)
-            ImageIO.write(dest, "PNG", file)
-        } finally {
-            dest.flush()
-        }
-    }
 }
 
 class KeySaving(scene: Scene, private val images: Map<String, BufferedImage>) : KeyListener {

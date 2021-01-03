@@ -91,8 +91,9 @@ fun main() {
         oidnView.stop(true)
     }
 
+    val saving = ImageSaving()
     val scene_name = scene.javaClass.simpleName.toLowerCase()
-    ImageIO.write(display.image, "PNG", File("example-output/$scene_name.png"))
-    ImageIO.write(oidnView.image, "PNG", File("example-output/$scene_name-denoise.png"))
+    saving.save(display.image, File("example-output/$scene_name-render.png"))
+    saving.save(oidnView.image, File("example-output/$scene_name-denoise.png"))
 
 }
