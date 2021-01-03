@@ -53,7 +53,8 @@ class BVH(hitables: List<Hitable>) : Hitable {
     }
 
     override fun hit(ray: Ray, min: Float, max: Float): Hit? {
-        return if (box.hit(ray, min, max)) {
+        return if (!box.hit(ray, min, max)) null
+        else {
             val hitLeft = left.hit(ray, min, max)
             val hitRight = right.hit(ray, min, max)
 
@@ -67,7 +68,6 @@ class BVH(hitables: List<Hitable>) : Hitable {
                 else -> null
             }
         }
-        else null
     }
 
     override fun bbox(): AABB? {

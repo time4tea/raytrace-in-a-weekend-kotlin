@@ -10,6 +10,9 @@ class Vec3(val x: Float, val y: Float, val z: Float) {
 
     constructor(x: Double, y: Double, z: Double) : this(x.toFloat(), y.toFloat(), z.toFloat())
     constructor(x: Int, y: Int, z: Int) : this(x.toFloat(), y.toFloat(), z.toFloat())
+    constructor(all: Float): this(all, all, all)
+    constructor(all: Double): this(all.toFloat())
+    constructor(all: Int): this(all.toFloat())
 
     companion object {
 

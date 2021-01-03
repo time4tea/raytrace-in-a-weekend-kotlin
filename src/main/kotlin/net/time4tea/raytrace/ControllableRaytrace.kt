@@ -2,7 +2,8 @@ package net.time4tea.raytrace
 
 import net.time4tea.oidn.Oidn
 import net.time4tea.oidn.OidnImages
-import net.time4tea.raytrace.scenes.weekend.WeekendFinal
+import net.time4tea.raytrace.scenes.found.CornellGlassBoxes
+import net.time4tea.raytrace.scenes.week.CornellBoxWithBox
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.Future
@@ -29,7 +30,8 @@ class ControllableScene(
 
     val up = Vec3(0f, 1f, 0f)
 
-    var samples = 2
+    var samples = 10
+    val max_depth = 100
 
     val submitted: AtomicReference<Future<*>> = AtomicReference(FutureTask { true })
 
@@ -38,7 +40,7 @@ class ControllableScene(
         submitted.get().cancel(false)
         submitted.set(executor.submit {
             try {
-                val renderer = Renderer(scene.scene(), samples, 2, scene.constantLight())
+                val renderer = Renderer(scene.scene(), samples, max_depth, scene.constantLight())
 
                 val aspect = display.size().width.toFloat() / display.size().height.toFloat()
                 start(lookfrom, lookat, up, samples)
@@ -79,7 +81,7 @@ fun main() {
 
     val oidn = Oidn()
 
-    val image = OidnImages.newBufferedImage(1600, 1200)
+    val image = OidnImages.newBufferedImage(600, 600)
     val display = BufferedImageDisplay(image)
     val oidnView = OidnView(oidn, display.image)
 
@@ -89,7 +91,7 @@ fun main() {
 
     val scaled = ScaledDisplay(1, display)
 
-    val bob: Scene = WeekendFinal()
+    val bob: Scene = CornellBoxWithBox()
 
     val controllableScene = ControllableScene({ bob }, executor, scaled, { lookfrom, lookat, up, samples ->
         println("Camera: LookFrom: $lookfrom  -> To: $lookat, Orientation: $up, Samples: $samples")

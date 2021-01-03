@@ -1,6 +1,7 @@
 package net.time4tea.raytrace
 
-import java.lang.Math.pow
+import kotlin.math.cos
+import kotlin.math.pow
 import kotlin.math.sqrt
 import kotlin.random.Random
 
@@ -21,6 +22,20 @@ class Isotropic(private val texture: Texture) : Material {
         return Scattered(
             texture.value(hit.u, hit.v, hit.p),
             Ray(hit.p, Vec3.random_unit_sphere())
+        )
+    }
+}
+
+class SurfaceNormal(brightness: Float, private val saturation: Float) : Material {
+    private val brightness = Vec3(brightness, brightness, brightness)
+
+    override fun scatter(input: Ray, hit: Hit): Scattered? {
+        val hitNormal = hit.normal
+        val scatterDirection = hitNormal + Vec3.random_unit_sphere();
+        val a = ( hitNormal * saturation) + brightness
+        return  Scattered(
+            Colour(a.x, a.y, a.z),
+            Ray(hit.p, scatterDirection)
         )
     }
 }
@@ -46,14 +61,14 @@ class Lambertian(private val texture: Texture) : Material {
     }
 }
 
-class Dielectric(private val ri: Float) : Material {
+class Dielectric(private val refractiveIndex: Float) : Material {
 
     constructor(ri: Double): this(ri.toFloat())
 
-    private fun schlick(cosine: Float, ref_idx: Float): Float {
-        var r0 = (1 - ref_idx) / (1 + ref_idx)
+    private fun schlick(cosine: Float, refractiveIndex: Float): Float {
+        var r0 = (1 - refractiveIndex) / (1 + refractiveIndex)
         r0 *= r0
-        return r0 + (1 - r0) * pow(1 - cosine.toDouble(), 5.0).toFloat()
+        return r0 + (1 - r0) * (1 - cosine.toDouble()).pow(5.0).toFloat()
     }
 
     override fun scatter(input: Ray, hit: Hit): Scattered? {
@@ -67,27 +82,24 @@ class Dielectric(private val ri: Float) : Material {
 
         if (input.direction.dot(hit.normal) > 0.0f) {
             outward_normal = -hit.normal
-            ni_over_nt = ri
-            val cosinex = input.direction.dot(hit.normal) / input.direction.length()
-            cosine = sqrt(1 - ri * ri * (1 - cosinex * cosinex))
+            ni_over_nt = refractiveIndex
+            cosine = refractiveIndex * input.direction.dot(hit.normal) / input.direction.length()
         } else {
             outward_normal = hit.normal
-            ni_over_nt = 1.0f / ri
+            ni_over_nt = 1.0f / refractiveIndex
             cosine = -(input.direction.dot(hit.normal)) / input.direction.length()
         }
 
         val refracted = input.direction.refract(outward_normal, ni_over_nt)
 
-        val reflect_prob = if (refracted != null) {
-            schlick(cosine, ri)
+        return if ( refracted != null ) {
+            if ( Random.nextFloat() > schlick(cosine, refractiveIndex )) {
+                Scattered(attenuation, Ray(hit.p, refracted))
+            } else {
+                Scattered(attenuation, Ray(hit.p, reflected))
+            }
         } else {
-            1.0f
-        }
-
-        return if (Random.nextFloat() < reflect_prob) {
             Scattered(attenuation, Ray(hit.p, reflected))
-        } else {
-            Scattered(attenuation, Ray(hit.p, refracted!!))
         }
     }
 }

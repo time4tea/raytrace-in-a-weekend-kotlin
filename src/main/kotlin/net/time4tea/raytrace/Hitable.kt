@@ -6,7 +6,14 @@ interface Hitable {
     fun components(): Int
 }
 
-data class Hit(val t: Float, val u: Float, val v: Float, val p: Vec3, val normal: Vec3, val material: Material)
+class Hit(
+    @JvmField val t: Float,
+    @JvmField val u: Float,
+    @JvmField val v: Float,
+    @JvmField val p: Vec3,
+    @JvmField val normal: Vec3,
+    @JvmField val material: Material
+)
 
 class HitableList(private val items: List<Hitable>) : Hitable {
     override fun hit(ray: Ray, min: Float, max: Float): Hit? {
@@ -39,7 +46,9 @@ class HitableList(private val items: List<Hitable>) : Hitable {
 class FlipNormals(private val delegate: Hitable): Hitable {
     override fun hit(ray: Ray, min: Float, max: Float): Hit? {
         return delegate.hit(ray, min, max)?.let {
-            it.copy(normal = -it.normal)
+            Hit(
+                it.t, it.u, it.v, it.p, -it.normal, it.material
+            )
         }
     }
 
